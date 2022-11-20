@@ -1,0 +1,32 @@
+/**
+ * @see https://www.electron.build/configuration/configuration
+ */
+{
+  "appId": "YourAppID",
+  "asar": true,
+  "directories": {
+    "output": "release/${version}"
+  },
+  "files": [
+    "dist-electron",
+    "dist"
+  ],
+  "mac": {
+    "artifactName": "${productName}_${version}.${ext}",
+    "target": [
+      "dmg"
+    ]
+  },
+  "win": {
+    "target": [
+      {
+        "target": "portable",
+        "arch": [
+          "x64"
+        ]
+      }
+    ],
+    "artifactName": "${productName}_${arch}_v${version}.${ext}",
+    "icon": "./public/app-icon.ico",
+  },
+}
