@@ -1,12 +1,19 @@
 <script setup lang="ts">
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
+import { ipcRenderer } from 'electron';
 import HelloWorld from './components/HelloWorld.vue'
 import HoldingsTable from './components/HoldingsTable.vue'
+import { getSecurityHistory, getSecurityList } from './services/security-list.service';
+
+const click = async () => {
+  console.log(await getSecurityHistory("662577"));
+}
 </script>
 
 <template>
   <HoldingsTable msg="Hello Vue 3 + TypeScript + Vite"></HoldingsTable>
+  <button @click="click()">aaa</button>
 </template>
 
 <style>
