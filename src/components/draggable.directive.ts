@@ -12,7 +12,6 @@ let origX = 0;
 let origY = 0;
 
 const dragStart = (event: MouseEvent, binding: DirectiveBinding) => {
-  console.log(event);
   dragging = true;
   origX = event.x;
   origY = event.y;
