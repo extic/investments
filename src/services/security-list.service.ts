@@ -1,18 +1,10 @@
 import { ipcRenderer } from "electron";
+import { SecurityData } from "src/store/chart-store";
 
 export type Security = {
   securityNumber: string;
   shortName: string;
   symbol: string;
-}
-
-export type SecurityData = {
-  closeRate: number;
-  dealsNo: number;
-  highRate: number;
-  lowRate: number;
-  openRate: number;
-  tradeDate: string;
 }
 
 export const getSecurityList = async () => {
@@ -24,7 +16,7 @@ export const getSecurityList = async () => {
     lang: "0",
   };
   const response = await ipcRenderer.invoke('http:request', "https://api.tase.co.il/api/index/components", body);
-  console.log(response);
+  // console.log(response);
   return response.Items.map((it: any) => {
     return {
       securityNumber: it.SecurityNumber,
@@ -36,9 +28,9 @@ export const getSecurityList = async () => {
 
 export const getSecurityHistory = async (securityNumber: string) => {
   const body = {
-    pType: 1,
+    pType: 7,
     TotalRec: 1,
-    pageNum: 1,
+    pageNum: 4,
     oId: securityNumber,
     lang: "1",
   };

@@ -6,8 +6,6 @@ export type Position = {
 };
 
 let dragging = false;
-// let deltaX = 0;
-// let deltaY = 0;
 let origX = 0;
 let origY = 0;
 
@@ -24,13 +22,16 @@ const dragStart = (event: MouseEvent, binding: DirectiveBinding) => {
   document.onmousemove = (event) => {
     drag(event, binding);
   };
-  document.onmouseup = dragEnd;
+  document.onmouseup = (event) => {
+    dragEnd(event, binding);
+  };
 };
 
-const dragEnd = (event: MouseEvent) => {
+const dragEnd = (event: MouseEvent, binding: DirectiveBinding) => {
   dragging = false;
   event.preventDefault();
   event.stopPropagation();
+  binding.value.dragEnded(binding.arg);
 };
 
 const drag = (event: MouseEvent, binding: DirectiveBinding) => {

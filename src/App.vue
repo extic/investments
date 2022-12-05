@@ -5,16 +5,26 @@ import { ipcRenderer } from 'electron';
 import SecurityChart from './components/SecurityChart.vue'
 import HoldingsTable from './components/HoldingsTable.vue'
 import { getSecurityHistory, getSecurityList } from './services/security-list.service';
+import { onMounted } from 'vue';
+import { useChartStore } from "./store/chart-store";
+import data from "./data/data.json";
 
 const click = async () => {
-  console.log(await getSecurityHistory("662577"));
+  const response = await getSecurityHistory("662577")
+  console.log(JSON.stringify(response));
 }
+
+onMounted(() => {
+  const store = useChartStore();
+  store.setSecurityData(data.reverse());
+  store.setIndexes(0, data.length - 1, 1);
+})
 </script>
 
 <template>
   <HoldingsTable msg="Hello Vue 3 + TypeScript + Vite"></HoldingsTable>
   <SecurityChart></SecurityChart>
-  <button @click="click()">aaa</button>
+  <button @click="click()">aaabbbb</button>
 </template>
 
 <style>

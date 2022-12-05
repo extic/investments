@@ -1,20 +1,38 @@
 import { defineStore } from "pinia";
 
+export type SecurityData = {
+  closeRate: number;
+  dealsNo: number;
+  highRate: number;
+  lowRate: number;
+  openRate: number;
+  tradeDate: string;
+}
+
 export const useChartStore = defineStore("chart", {
   state: () => ({
-    _scrollLeft: 0,
-    _scrollRight: 0,
+    _securityData: [] as SecurityData[],
+    _startIndex: 0,
+    _endIndex: 0,
+    _quoteWidth: 0,
   }),
 
   getters: {
-    scrollLeft: (state): number => state._scrollLeft,
-    scrollRight: (state): number => state._scrollRight,
+    securityData: (state): SecurityData[] => state._securityData,
+    startIndex: (state): number => state._startIndex,
+    endIndex: (state): number => state._endIndex,
+    quoteWidth: (state): number => state._quoteWidth,
   },
 
   actions: {
-    setScroll(scrollLeft: number, scrollRight: number): void {
-      this._scrollLeft = scrollLeft;
-      this._scrollRight = scrollRight;
+    setSecurityData(data: SecurityData[]): void {
+      this._securityData = data;
+    },
+
+    setIndexes(startIndex: number, endIndex: number, quoteWidth: number): void {
+      this._startIndex = startIndex;
+      this._endIndex = endIndex;
+      this._quoteWidth = quoteWidth;
     },
   },
 });

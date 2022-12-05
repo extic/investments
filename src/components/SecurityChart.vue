@@ -1,9 +1,7 @@
 <template>
   <div class="security-chart">
     <div class="chart-container">
-      <div class="date-panel">
-        <canvas></canvas>
-      </div>
+      <ChartDatePane></ChartDatePane>
       <div class="chart-panel-container">
         <div class="chart-panel">
           <canvas></canvas>
@@ -18,15 +16,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 import ChartScrollbar from "./chart/ChartScrollbar.vue"
+import ChartDatePane from "./chart/ChartDatePane.vue"
 
 type ChartPanel = {};
 
 export default defineComponent({
   name: "SecurityChart",
 
-  components: { ChartScrollbar },
+  components: { ChartScrollbar, ChartDatePane },
 
   setup() {
     const panels: ChartPanel[] = [];
@@ -41,47 +40,13 @@ export default defineComponent({
 
   .chart-container {
     position: relative;
+    height: 400px;
 
     .date-panel {
-      border: 1px solid red;
-      height: 21px;
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
+
     }
   }
 
-  .chart-scrollbar {
-    height: 20px;
-    width: 100%;
-    // min-width: 50px;
-    position: relative;
-    min-height: 11px;
-    margin: 2px 0;
 
-    .chart-scrollbar-panel {
-      position: absolute;
-      background-color: #bdbdbd;
-      height: 100%;
-
-      .handle {
-        position: absolute;
-        width: 6px;
-        background-color: gray;
-        height: 100%;
-
-        &.left {
-          left: 0;
-          cursor: w-resize;
-          background-color: blue;
-        }
-        &.right {
-          right: 0;
-          cursor: e-resize;
-        }
-      }
-    }
-  }
 }
 </style>
