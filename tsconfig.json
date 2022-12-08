@@ -10,12 +10,16 @@
     "sourceMap": true,
     "baseUrl": "./",
     "strict": true,
-    "paths": {},
+    "paths": {
+      "@/*": ["src/*"],
+      "@main/*": ["electron/main/*"],
+      "@preconfig/*": ["electron/preconfig/*"],
+    },
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true
   },
   "include": ["src"],
   "references": [
     { "path": "./tsconfig.node.json" }
-  ]
+  ],
 }

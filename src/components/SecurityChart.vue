@@ -1,35 +1,35 @@
 <template>
   <div class="security-chart">
-    <div class="chart-container">
-      <ChartDatePane></ChartDatePane>
+    <div class="chart-container"  :style="{ height: `${chartHeight}px` }">
       <div class="chart-panel-container">
-        <div class="chart-panel">
-          <canvas></canvas>
-        </div>
-        <div class="chart-panel">
-          <canvas></canvas>
-        </div>
+        <ChartPane v-for="renderer in chartRenderers" :renderer="renderer"></ChartPane>
       </div>
+      <ChartDatePane></ChartDatePane>
     </div>
     <ChartScrollbar></ChartScrollbar>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from "vue";
-import ChartScrollbar from "./chart/ChartScrollbar.vue"
-import ChartDatePane from "./chart/ChartDatePane.vue"
-
-type ChartPanel = {};
+import { sumBy } from "lodash";
+import { useChartStore } from "../store/chart-store";
+import { computed, defineComponent } from "vue";
+import { DATE_PANE_HEIGHT } from "./chart/chart.constants";
+import ChartDatePane from "./chart/ChartDatePane.vue";
+import ChartPane from "./chart/ChartPane.vue";
+import ChartScrollbar from "./chart/ChartScrollbar.vue";
 
 export default defineComponent({
   name: "SecurityChart",
 
-  components: { ChartScrollbar, ChartDatePane },
+  components: { ChartScrollbar, ChartDatePane, ChartPane },
 
   setup() {
-    const panels: ChartPanel[] = [];
-    return { panels };
+    const store = useChartStore();
+    const chartRenderers = computed(() => store.chartRenderers);
+    const chartHeight = computed(() => sumBy(chartRenderers.value, (it) => it.getHeight()) + DATE_PANE_HEIGHT);
+
+    return { chartRenderers, chartHeight };
   },
 });
 </script>
@@ -40,13 +40,10 @@ export default defineComponent({
 
   .chart-container {
     position: relative;
-    height: 400px;
+    // height: 400px;
 
-    .date-panel {
-
+    .chart-panel-container {
     }
   }
-
-
 }
 </style>

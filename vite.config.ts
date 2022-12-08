@@ -4,6 +4,7 @@ import vue from '@vitejs/plugin-vue'
 import electron from 'vite-plugin-electron'
 import renderer from 'vite-plugin-electron-renderer'
 import pkg from './package.json'
+import path from 'path'
 
 rmSync('dist-electron', { recursive: true, force: true })
 const sourcemap = !!process.env.VSCODE_DEBUG
@@ -38,7 +39,7 @@ export default defineConfig({
       {
         entry: 'electron/preload/index.ts',
         onstart(options) {
-          // Notify the Renderer-Process to reload the page when the Preload-Scripts build is complete, 
+          // Notify the Renderer-Process to reload the page when the Preload-Scripts build is complete,
           // instead of restarting the entire Electron App.
           options.reload()
         },
@@ -67,4 +68,12 @@ export default defineConfig({
     }
   })() : undefined,
   clearScreen: false,
+
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+      "@main": path.resolve(__dirname, "./electron/main"),
+      "@preload": path.resolve(__dirname, "./electron/preload"),
+    }
+  }
 })

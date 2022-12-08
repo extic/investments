@@ -1,13 +1,11 @@
 <script setup lang="ts">
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-import { ipcRenderer } from 'electron';
-import SecurityChart from './components/SecurityChart.vue'
-import HoldingsTable from './components/HoldingsTable.vue'
-import { getSecurityHistory, getSecurityList } from './services/security-list.service';
 import { onMounted } from 'vue';
-import { useChartStore } from "./store/chart-store";
-import data from "./data/data.json";
+import { generateChartPanes } from './chart/chart-generator.service';
+import HoldingsTable from './components/HoldingsTable.vue';
+import SecurityChart from './components/SecurityChart.vue';
+import { getSecurityHistory } from './services/security-list.service';
 
 const click = async () => {
   const response = await getSecurityHistory("662577")
@@ -15,9 +13,7 @@ const click = async () => {
 }
 
 onMounted(() => {
-  const store = useChartStore();
-  store.setSecurityData(data.reverse());
-  store.setIndexes(0, data.length - 1, 1);
+  generateChartPanes();
 })
 </script>
 

@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { useChartStore } from "../../store/chart-store";
+import { useChartStore } from "@/store/chart-store";
 import { defineComponent, onMounted, ref, watch } from "vue";
 
 export default defineComponent({
@@ -27,6 +27,7 @@ export default defineComponent({
     const disableWatch = ref(false);
     const leftHandlePos = ref(0);
     const rightHandlePos = ref(0);
+    const store = useChartStore();
 
     let elementOrig: number;
     const dragStarted = (handle: string) => {
@@ -52,8 +53,8 @@ export default defineComponent({
       switch (handle) {
         case "left": {
           if (elementOrig + offsetX > 0) {
-            if (rightHandlePos.value - (elementOrig + offsetX) > 50) {
-              updateScrolls(elementOrig + offsetX, undefined);
+            if (rightHandlePos.value - (elementOrig + offsetX) >= 50) {
+              updateScrolls(elementOrig + offsetX, rightHandlePos.value);
             } else {
               const delta = elementOrig + offsetX - leftHandlePos.value;
               if (rightHandlePos.value + delta < scrollbar.value!!.offsetWidth) {
@@ -63,7 +64,7 @@ export default defineComponent({
               }
             }
           } else {
-            updateScrolls(0, undefined);
+            updateScrolls(0, rightHandlePos.value);
           }
           break;
         }
@@ -81,8 +82,8 @@ export default defineComponent({
         }
         case "right": {
           if (elementOrig + offsetX < scrollbar.value!!.offsetWidth) {
-            if (elementOrig + offsetX - leftHandlePos.value > 50) {
-              updateScrolls(undefined, elementOrig + offsetX);
+            if (elementOrig + offsetX - leftHandlePos.value >= 50) {
+              updateScrolls(leftHandlePos.value, elementOrig + offsetX);
             } else {
               const delta = rightHandlePos.value - (elementOrig + offsetX);
               if (leftHandlePos.value - delta > 0) {
@@ -92,43 +93,47 @@ export default defineComponent({
               }
             }
           } else {
-            updateScrolls(undefined, scrollbar.value!!.offsetWidth);
+            updateScrolls(leftHandlePos.value, scrollbar.value!!.offsetWidth);
           }
           break;
         }
       }
     };
 
-    const store = useChartStore();
-
-    const updateScrolls = (leftScroll: number | undefined, rightScroll: number | undefined) => {
+    const updateScrolls = (leftScroll: number, rightScroll: number) => {
       const lastLeftScroll = leftHandlePos.value;
       const lastRightScroll = rightHandlePos.value;
-      if (leftScroll !== undefined) {
-        leftHandlePos.value = leftScroll;
-      }
-      if (rightScroll !== undefined) {
-        rightHandlePos.value = rightScroll;
-      }
+      leftHandlePos.value = leftScroll;
+      rightHandlePos.value = rightScroll;
 
       if (lastLeftScroll !== leftScroll || lastRightScroll !== rightScroll) {
-        const width = scrollbar.value!!.offsetWidth;
-        const startIndex = Math.floor((leftHandlePos.value / width) * store.securityData.length);
-        const endIndex = Math.floor((rightHandlePos.value / width) * store.securityData.length - 1);
-        const quoteWidth = scrollbar.value!!.offsetWidth / (store.endIndex - store.startIndex);
-        store.setIndexes(startIndex, endIndex, quoteWidth);
+        const scrollPosition = leftHandlePos.value!! / (scrollbar.value!!.offsetWidth - 50);
+        const scrollLength = (rightHandlePos.value!! - leftHandlePos.value!! - 50) / (scrollbar.value!!.offsetWidth - 50);
+
+        // console.log(scrollPosition, scrollLength);
+
+        store.setScroll(scrollPosition, scrollLength);
       }
     };
 
+    const initScrolls = () => {
+      console.log("init");
+      leftHandlePos.value = store.scrollPosition * scrollbar.value!!.offsetWidth;
+      rightHandlePos.value = leftHandlePos.value + store.scrollLength * scrollbar.value!!.offsetWidth;
+    };
+
     watch(
-      () => [store.startIndex, store.endIndex],
-      ([newStartIndex, newEndIndex]) => {
+      () => [store.scrollPosition, store.scrollLength],
+      () => {
         if (!disableWatch.value) {
-          leftHandlePos.value = (newStartIndex / store.securityData.length) * scrollbar.value!!.offsetWidth;
-          rightHandlePos.value = (newEndIndex / store.securityData.length) * scrollbar.value!!.offsetWidth;
+          initScrolls();
         }
       }
     );
+
+    onMounted(() => {
+      initScrolls();
+    });
 
     const dragInfo = { dragStarted, dragEnded, dragged };
 
