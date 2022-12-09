@@ -1,8 +1,11 @@
 <template>
   <div class="security-chart">
-    <div class="chart-container"  :style="{ height: `${chartHeight}px` }">
+    <div class="chart-container" :style="{ height: `${chartHeight}px` }">
       <div class="chart-panel-container">
-        <ChartPane v-for="renderer in chartRenderers" :renderer="renderer"></ChartPane>
+        <div v-for="(renderer, index) in chartRenderers">
+          <div v-if="(index !== 0)" class="separator"></div>
+          <ChartPane :renderer="renderer"></ChartPane>
+        </div>
       </div>
       <ChartDatePane></ChartDatePane>
     </div>
@@ -43,6 +46,9 @@ export default defineComponent({
     // height: 400px;
 
     .chart-panel-container {
+      .separator {
+        border-top: 1px solid lightgray;
+      }
     }
   }
 }

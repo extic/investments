@@ -30,6 +30,19 @@ export default defineComponent({
       () => [store.startIndex, store.endIndex],
       ([newStartIndex, newEndIndex]) => {
         const ctx = canvas.value!!.getContext("2d")!!;
+
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+        ctx.strokeStyle = "lightgray";
+        ctx.beginPath();
+        for (let i=0; i<(newEndIndex - newStartIndex); i += 5) {
+          const pos = Math.round(ctx.canvas.width - i * store.quoteWidth - store.quoteWidth / 2);
+          ctx.moveTo(pos, 0);
+          ctx.lineTo(pos, ctx.canvas.height);
+        }
+        ctx.closePath();
+        ctx.stroke();
+
         props.renderer!!.paint(ctx, newStartIndex, newEndIndex, store.quoteWidth);
       }
     );

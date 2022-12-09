@@ -22,7 +22,7 @@ export class CandleStickChartRenderer implements ChartRenderer {
     const width = ctx.canvas.width;
     const height = ctx.canvas.height;
 
-    ctx.clearRect(0, 0, width, height);
+    // ctx.clearRect(0, 0, width, height);
 
     // console.log("quoteWidth", quoteWidth);
     const { min, max } = this.findMinMax(startIndex, endIndex);
@@ -57,9 +57,9 @@ export class CandleStickChartRenderer implements ChartRenderer {
       ctx.fillStyle = close > open ? "red" : "green";
       ctx.fillRect(pos + 1, close, quoteWidth - 2, -(close-open));
 
-      ctx.strokeStyle = "red";
-      ctx.font = "8px helvetica";
-      ctx.strokeText(this.data[i].high.toString(), pos + 1, 20);
+      // ctx.strokeStyle = "red";
+      // ctx.font = "8px helvetica";
+      // ctx.strokeText(this.data[i].high.toString(), pos + 1, 20);
 
       pos -= quoteWidth;
     }

@@ -20,7 +20,7 @@ export class StandingBarChartRenderer implements ChartRenderer {
     const width = ctx.canvas.width;
     const height = ctx.canvas.height;
 
-    ctx.clearRect(0, 0, width, height);
+    // ctx.clearRect(0, 0, width, height);
     ctx.fillStyle = "blue";
 
     // console.log("quoteWidth", quoteWidth);
@@ -31,9 +31,9 @@ export class StandingBarChartRenderer implements ChartRenderer {
     for (let i = endIndex - 1; i >= startIndex; i--) {
       ctx.fillRect(pos + 1, height, quoteWidth - 2, -this.data[i] / (max - min) * height);
 
-      ctx.strokeStyle = "red";
-      ctx.font = "11px helvetica";
-      ctx.strokeText(this.data[i].toString(), pos + 1, 20);
+      // ctx.strokeStyle = "red";
+      // ctx.font = "11px helvetica";
+      // ctx.strokeText(this.data[i].toString(), pos + 1, 20);
 
       pos -= quoteWidth;
     }
