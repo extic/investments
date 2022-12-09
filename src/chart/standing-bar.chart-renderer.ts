@@ -16,8 +16,12 @@ export class StandingBarChartRenderer implements ChartRenderer {
     };
   }
 
-  public paint(ctx: CanvasRenderingContext2D, width: number, height: number, startIndex: number, endIndex: number, quoteWidth: number): void {
+  public paint(ctx: CanvasRenderingContext2D, startIndex: number, endIndex: number, quoteWidth: number): void {
+    const width = ctx.canvas.width;
+    const height = ctx.canvas.height;
+
     ctx.clearRect(0, 0, width, height);
+    ctx.fillStyle = "blue";
 
     // console.log("quoteWidth", quoteWidth);
     const { min, max } = this.findMinMax(startIndex, endIndex);

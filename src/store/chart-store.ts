@@ -9,6 +9,7 @@ export type SecurityData = {
   lowRate: number;
   openRate: number;
   tradeDate: string;
+  volume: number;
 }
 
 export const useChartStore = defineStore("chart", {

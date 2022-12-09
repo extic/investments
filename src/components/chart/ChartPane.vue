@@ -8,6 +8,7 @@
 import { defineComponent, onMounted, PropType, ref, watch } from "vue";
 import { ChartRenderer } from "@/chart/chart.renderer";
 import { useChartStore } from "@/store/chart-store";
+import { nextTick } from "process";
 
 export default defineComponent({
   name: "ChartPane",
@@ -28,12 +29,8 @@ export default defineComponent({
     watch(
       () => [store.startIndex, store.endIndex],
       ([newStartIndex, newEndIndex]) => {
-
-        // console.log("barak");
-        // console.log(newStartIndex, newEndIndex)
-        //const minMax = props.renderer?.findMinMax(newStartIndex, newEndIndex);
         const ctx = canvas.value!!.getContext("2d")!!;
-        props.renderer!!.paint(ctx, canvas.value!!.offsetWidth, canvas.value!!.offsetHeight, newStartIndex, newEndIndex, store.quoteWidth);
+        props.renderer!!.paint(ctx, newStartIndex, newEndIndex, store.quoteWidth);
       }
     );
 
@@ -41,6 +38,10 @@ export default defineComponent({
       paneWidth.value = pane.value!!.offsetWidth;
       store.setChartWidth(paneWidth.value);
       paneHeight.value = props.renderer!!.getHeight();
+      const ctx = canvas.value!!.getContext("2d")!!;
+      nextTick(() => {
+        ctx.translate(-0.5, -0.5);
+      });
     });
 
     return { paneWidth, paneHeight, pane, canvas };

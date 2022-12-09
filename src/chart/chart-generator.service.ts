@@ -1,9 +1,12 @@
 import { useChartStore } from "../store/chart-store";
-import data from "../data/data.json";
 import { nextTick } from "vue";
-import { VolumeDataProvider } from "./volume.data-provider";
+import { CandleStickDataProvider } from "./candlestick.data-provider";
 import { ChartRenderer } from "./chart.renderer";
 import { StandingBarChartRenderer } from "./standing-bar.chart-renderer";
+import { CandleStickChartRenderer } from "./candlestick.chart-renderer";
+import { VolumeDataProvider } from "./volume.data-provider";
+import data from "../data/data.json";
+
 
 export type PaneDescriptor = {
   height: number;
@@ -16,13 +19,18 @@ class VolumeChartDescriptor implements ChartDescriptor {}
 
 export function generateChartPanes() {
   const store = useChartStore();
+  store.setSecurityData(data.reverse());
 
-  const volumeData = new VolumeDataProvider().provide(data);
-  const renderers: ChartRenderer[] = [new StandingBarChartRenderer(400, volumeData)];
+  const securityData = store.securityData;
+
+
+  const candleStickData = new CandleStickDataProvider().provide(securityData);
+  const volumeData = new VolumeDataProvider().provide(securityData);
+  const renderers: ChartRenderer[] = [new CandleStickChartRenderer(400, candleStickData), new StandingBarChartRenderer(200, volumeData)];
   store.setChartRenderers(renderers);
 
   nextTick(() => {
-    store.setSecurityData(data.reverse());
+    // store.setSecurityData(securityData);
     store.setScroll(0, 1);
   });
 
@@ -36,5 +44,3 @@ export type MinMax = {
   min: number;
   max: number;
 };
-
-

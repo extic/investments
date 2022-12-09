@@ -3,6 +3,7 @@ import { DataProvider } from "./data.provider";
 
 export class VolumeDataProvider implements DataProvider<SecurityData, number> {
   public provide(data: SecurityData[]): number[] {
-    return data.map((it) => it.dealsNo);
+    console.log(data.map((it) => it.volume))
+    return data.map((it) => it.volume);
   }
 }

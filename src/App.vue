@@ -8,8 +8,17 @@ import SecurityChart from './components/SecurityChart.vue';
 import { getSecurityHistory } from './services/security-list.service';
 
 const click = async () => {
-  const response = await getSecurityHistory("662577")
-  console.log(JSON.stringify(response));
+  const response1 = await getSecurityHistory("662577", 1)
+  console.log(JSON.stringify(response1));
+  const response2 = await getSecurityHistory("662577", 2)
+  console.log(JSON.stringify(response2));
+  const response3 = await getSecurityHistory("662577", 3)
+  console.log(JSON.stringify(response3));
+  const response4 = await getSecurityHistory("662577", 4)
+  console.log(JSON.stringify(response4));
+  const response5 = await getSecurityHistory("662577", 5)
+  console.log(JSON.stringify(response5));
+
 }
 
 onMounted(() => {

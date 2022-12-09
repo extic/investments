@@ -26,11 +26,11 @@ export const getSecurityList = async () => {
   })
 }
 
-export const getSecurityHistory = async (securityNumber: string) => {
+export const getSecurityHistory = async (securityNumber: string, pageNumber: number) => {
   const body = {
     pType: 7,
     TotalRec: 1,
-    pageNum: 4,
+    pageNum: pageNumber,
     oId: securityNumber,
     lang: "1",
   };
@@ -43,6 +43,7 @@ export const getSecurityHistory = async (securityNumber: string) => {
       lowRate: it.LowRate,
       openRate: it.OpenRate,
       tradeDate: it.TradeDate,
+      volume: it.OverallTurnOverUnits,
 } as SecurityData;
   })
 }
