@@ -1,49 +1,81 @@
+<template>
+  <div class="app">
+    <HeaderBar class="header"></HeaderBar>
+    <div class="content">
+      <router-view class="view"/>
+      <!-- <div class="chart-container">
+        <SecurityChart></SecurityChart>
+      </div> -->
+    </div>
+  </div>
+  <!-- <HoldingsTable msg="Hello Vue 3 + TypeScript + Vite"></HoldingsTable>
+  <SecurityChart></SecurityChart>
+  <button @click="click()">aaabbbb</button> -->
+</template>
+
 <script setup lang="ts">
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
+
 import { onMounted } from 'vue';
 import { generateChartPanes } from './chart/chart-generator.service';
+import HeaderBar from './components/HeaderBar.vue';
 import HoldingsTable from './components/HoldingsTable.vue';
 import SecurityChart from './components/SecurityChart.vue';
 import { getSecurityHistory } from './services/security-list.service';
 
-const click = async () => {
-  const response1 = await getSecurityHistory("662577", 1)
-  console.log(JSON.stringify(response1));
-  const response2 = await getSecurityHistory("662577", 2)
-  console.log(JSON.stringify(response2));
-  const response3 = await getSecurityHistory("662577", 3)
-  console.log(JSON.stringify(response3));
-  const response4 = await getSecurityHistory("662577", 4)
-  console.log(JSON.stringify(response4));
-  const response5 = await getSecurityHistory("662577", 5)
-  console.log(JSON.stringify(response5));
+// const click = async () => {
+//   const response1 = await getSecurityHistory("662577", 1)
+//   console.log(JSON.stringify(response1));
+//   const response2 = await getSecurityHistory("662577", 2)
+//   console.log(JSON.stringify(response2));
+//   const response3 = await getSecurityHistory("662577", 3)
+//   console.log(JSON.stringify(response3));
+//   const response4 = await getSecurityHistory("662577", 4)
+//   console.log(JSON.stringify(response4));
+//   const response5 = await getSecurityHistory("662577", 5)
+//   console.log(JSON.stringify(response5));
 
-}
+// }
 
-onMounted(() => {
-  generateChartPanes();
-})
+// onMounted(() => {
+//   generateChartPanes();
+// })
 </script>
 
-<template>
-  <HoldingsTable msg="Hello Vue 3 + TypeScript + Vite"></HoldingsTable>
-  <SecurityChart></SecurityChart>
-  <button @click="click()">aaabbbb</button>
-</template>
-
-<style>
+<style lang="scss">
 html {
   direction: rtl;
 }
 
-#app {
+.app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  // border: 1px solid cyan;
+
+  .header {
+    // border: 1px solid red;
+  }
+
+  .content {
+    flex-grow: 1;
+    display: flex;
+
+    .chart-container {
+      width: 50%;
+    }
+
+    .view {
+      width: 50%;
+    }
+  }
 }
 
 .logo-box {

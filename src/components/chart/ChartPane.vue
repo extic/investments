@@ -1,5 +1,8 @@
 <template>
   <div class="chart-pane" ref="pane" :style="{ height: `${paneHeight}px` }">
+    <div class="chart-title">
+      <div>הפועלים</div>
+    </div>
     <canvas ref="canvas" :width="paneWidth" :height="paneHeight"></canvas>
   </div>
 </template>
@@ -64,6 +67,15 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .chart-pane {
+  position: relative;
+  .chart-title {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 2px;
+    text-align: left;
+  }
   // // border: 1px solid #cccccc;
   // height: 21px;
   // position: absolute;
