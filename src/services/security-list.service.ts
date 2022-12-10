@@ -1,10 +1,10 @@
 import { ipcRenderer } from "electron";
-import { SecurityData } from "src/store/chart-store";
+import { SecurityData } from "@/store/chart.store";
 
 export type Security = {
   securityNumber: string;
   securityName: string;
-  shortName: string;
+  symbol: string;
 }
 
 export const getSecurityList = async () => {

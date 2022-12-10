@@ -10,7 +10,7 @@
 <script lang="ts">
 import { defineComponent, onMounted, PropType, ref, watch } from "vue";
 import { ChartRenderer } from "@/chart/chart.renderer";
-import { useChartStore } from "@/store/chart-store";
+import { useChartStore } from "@/store/chart.store";
 import { nextTick } from "process";
 
 export default defineComponent({

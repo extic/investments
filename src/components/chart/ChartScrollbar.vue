@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { useChartStore } from "@/store/chart-store";
+import { useChartStore } from "@/store/chart.store";
 import { defineComponent, onMounted, ref, watch } from "vue";
 
 export default defineComponent({

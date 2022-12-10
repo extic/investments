@@ -48,13 +48,15 @@
 </template>
 
 <script lang="ts">
+import { useHoldingsStore } from "@/store/holdings.store";
 import { defineComponent, ref } from "vue";
-import holdings from "../data/holdings.data.json";
 
 export default defineComponent({
   name: "HoldingsView",
 
   setup() {
+    const holddingStore = useHoldingsStore();
+    const holdings = holddingStore.holdings
     return { holdings };
   },
 });

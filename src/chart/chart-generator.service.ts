@@ -1,4 +1,4 @@
-import { useChartStore } from "../store/chart-store";
+import { useChartStore } from "../store/chart.store";
 import { nextTick } from "vue";
 import { CandleStickDataProvider } from "./candlestick.data-provider";
 import { ChartRenderer } from "./chart.renderer";

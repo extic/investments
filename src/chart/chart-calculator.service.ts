@@ -1,4 +1,4 @@
-import { useChartStore } from "../store/chart-store";
+import { useChartStore } from "../store/chart.store";
 
 class ChartRecalculator {
   public recalc() {

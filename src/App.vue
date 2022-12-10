@@ -3,9 +3,9 @@
     <HeaderBar class="header"></HeaderBar>
     <div class="content">
       <router-view class="view"/>
-      <!-- <div class="chart-container">
+      <div class="chart-container">
         <SecurityChart></SecurityChart>
-      </div> -->
+      </div>
     </div>
   </div>
   <!-- <HoldingsTable msg="Hello Vue 3 + TypeScript + Vite"></HoldingsTable>
@@ -21,6 +21,10 @@ import HeaderBar from './components/HeaderBar.vue';
 import HoldingsTable from './components/HoldingsTable.vue';
 import SecurityChart from './components/SecurityChart.vue';
 import { getSecurityHistory } from './services/security-list.service';
+import { useSecurityListStore } from './store/security-list.store';
+import { useSetttingsStore } from './store/settings.store';
+import fs from "fs";
+import { initApp } from './services/initializer.service';
 
 // const click = async () => {
 //   const response1 = await getSecurityHistory("662577", 1)
@@ -36,9 +40,9 @@ import { getSecurityHistory } from './services/security-list.service';
 
 // }
 
-// onMounted(() => {
-//   generateChartPanes();
-// })
+onMounted(() => {
+  initApp();
+})
 </script>
 
 <style lang="scss">

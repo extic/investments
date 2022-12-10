@@ -15,7 +15,7 @@
 
 <script lang="ts">
 import { sumBy } from "lodash";
-import { useChartStore } from "../store/chart-store";
+import { useChartStore } from "../store/chart.store";
 import { computed, defineComponent } from "vue";
 import { DATE_PANE_HEIGHT } from "./chart/chart.constants";
 import ChartDatePane from "./chart/ChartDatePane.vue";

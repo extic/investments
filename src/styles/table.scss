@@ -9,17 +9,29 @@ table {
         border-left: 1px solid gray;
         padding: 0.4em 1em;
         font-weight: normal;
+        cursor: default;
       }
     }
 
     tbody {
-      tr:nth-of-type(odd) {
-        background-color: #EBEBEB;
-      }
+      tr {
+        &:nth-of-type(odd) {
+          background-color: #EBEBEB;
+        }
+
+        &:hover {
+          background-color: #E3DEE5;
+        }
+
+        &.selected {
+          background-color: #A193A6;
+        }
+      }      
 
       td {
         padding: 0.2em 2em;
         white-space: nowrap;
+        cursor: default;
 
         .change-cell {
           display: flex;

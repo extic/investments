@@ -42,7 +42,7 @@ const indexHtml = join(process.env.DIST, 'index.html')
 async function createWindow() {
   win = new BrowserWindow({
     title: 'Extremely Investments - Loading...',
-    icon: join(process.env.PUBLIC, 'app-icon.ico'),
+    icon: join(process.env.PUBLIC, 'public/app-icon.svg'),
     width: 1600,
     height: 900,
     webPreferences: {

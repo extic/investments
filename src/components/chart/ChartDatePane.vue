@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { useChartStore } from "../../store/chart-store";
+import { useChartStore } from "../../store/chart.store";
 import { defineComponent, nextTick, onMounted, ref, watch } from "vue";
 import { DATE_PANE_HEIGHT } from "./chart.constants";
 
