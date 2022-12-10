@@ -44,7 +44,6 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import moment from "moment";
-import fs from "fs";
 
 type HoldingData = {
   id: string,

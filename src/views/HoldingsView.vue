@@ -62,49 +62,6 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .holdings-view {
-  table {
-    border-collapse: collapse;
-
-    thead {
-      background-color: #421e4d;
-      color: white;
-
-      th {
-        border-left: 1px solid gray;
-        padding: 0.4em 1em;
-        font-weight: normal;
-      }
-    }
-
-    tbody {
-      tr:nth-of-type(odd) {
-        background-color: #EBEBEB;
-      }
-
-      td {
-        padding: 0.2em 2em;
-        white-space: nowrap;
-
-        .change-cell {
-          display: flex;
-          gap: 10px;
-        }
-
-        .arrow-up {
-          color: green;
-        }
-
-        .arrow-down {
-          color: red;
-        }
-
-        .number {
-          direction: ltr;
-          text-align: right;
-        }
-      }
-    }
-  }
-  // background-color: red;
+  @import "../styles/table.scss";
 }
 </style>

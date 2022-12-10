@@ -47,7 +47,7 @@ export default defineComponent({
 
     .tab {
       color: black;
-      padding: 0.2em 1em 0 1em;
+      padding: 0.2em 1em 0.2em 1em;
       border-radius: 5px 5px 0 0;
     }
 

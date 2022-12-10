@@ -3,8 +3,8 @@ import { SecurityData } from "src/store/chart-store";
 
 export type Security = {
   securityNumber: string;
+  securityName: string;
   shortName: string;
-  symbol: string;
 }
 
 export const getSecurityList = async () => {
@@ -20,7 +20,7 @@ export const getSecurityList = async () => {
   return response.Items.map((it: any) => {
     return {
       securityNumber: it.SecurityNumber,
-      shortName: it.ShortName,
+      securityName: it.ShortName,
       symbol: it.Symbol,
     } as Security;
   })
