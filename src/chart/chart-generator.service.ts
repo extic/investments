@@ -1,11 +1,10 @@
-import { useChartStore } from "../store/chart.store";
+import { SecurityData, useChartStore } from "../store/chart.store";
 import { nextTick } from "vue";
 import { CandleStickDataProvider } from "./candlestick.data-provider";
 import { ChartRenderer } from "./chart.renderer";
 import { StandingBarChartRenderer } from "./standing-bar.chart-renderer";
 import { CandleStickChartRenderer } from "./candlestick.chart-renderer";
 import { VolumeDataProvider } from "./volume.data-provider";
-import data from "../data/data.json";
 
 
 export type PaneDescriptor = {
@@ -17,7 +16,7 @@ interface ChartDescriptor {}
 
 class VolumeChartDescriptor implements ChartDescriptor {}
 
-export function generateChartPanes() {
+export function generateChartPanes(data: SecurityData[]) {
   const store = useChartStore();
   store.setSecurityData(data.reverse());
 

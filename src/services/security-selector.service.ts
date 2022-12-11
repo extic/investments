@@ -1,3 +1,4 @@
+import { generateChartPanes } from "@/chart/chart-generator.service";
 import { useChartStore } from "@/store/chart.store";
 import { readSecurityDataFile, saveSecurityDataFile, SecurityDataFile } from "./db/security-data.db.service";
 import { supplementSecurityDataFile } from "./security-data-supplementor.service";
@@ -13,6 +14,8 @@ export const selectSecurity = async (securityNumber: string): Promise<void> => {
 
     const chartStore = useChartStore();
     chartStore.setSecurityData(newData);
+
+    generateChartPanes(newData);
 }
 
 function readDataFile(securityNumber: string): SecurityDataFile {

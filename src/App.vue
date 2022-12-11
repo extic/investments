@@ -73,11 +73,12 @@ html {
     display: flex;
 
     .chart-container {
-      width: 50%;
+      width: 75%;
     }
 
     .view {
-      width: 50%;
+      width: 25%;
+      overflow: auto;
     }
   }
 }
