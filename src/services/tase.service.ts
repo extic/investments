@@ -1,11 +1,6 @@
 import { ipcRenderer } from "electron";
 import { SecurityData } from "@/store/chart.store";
-
-export type Security = {
-  securityNumber: string;
-  securityName: string;
-  symbol: string;
-}
+import { Security } from "@/store/security-list.store";
 
 export const getSecurityList = async () => {
   const body = {
@@ -15,7 +10,7 @@ export const getSecurityList = async () => {
     oId: "142",
     lang: "0",
   };
-  const response = await ipcRenderer.invoke('http:request', "https://api.tase.co.il/api/index/components", body);
+  const response = await ipcRenderer.invoke("http:request", "https://api.tase.co.il/api/index/components", body);
   // console.log(response);
   return response.Items.map((it: any) => {
     return {
@@ -23,10 +18,10 @@ export const getSecurityList = async () => {
       securityName: it.ShortName,
       symbol: it.Symbol,
     } as Security;
-  })
-}
+  });
+};
 
-export const getSecurityHistory = async (securityNumber: string, pageNumber: number) => {
+export const getSecurityHistory = async (securityNumber: string, pageNumber: number): Promise<SecurityData[]> => {
   const body = {
     pType: 7,
     TotalRec: 1,
@@ -34,7 +29,7 @@ export const getSecurityHistory = async (securityNumber: string, pageNumber: num
     oId: securityNumber,
     lang: "1",
   };
-  const response = await ipcRenderer.invoke('http:request', "https://api.tase.co.il/api/security/historyeod", body);
+  const response = await ipcRenderer.invoke("http:request", "https://api.tase.co.il/api/security/historyeod", body);
   return response.Items.map((it: any) => {
     return {
       closeRate: it.CloseRate,
@@ -44,6 +39,6 @@ export const getSecurityHistory = async (securityNumber: string, pageNumber: num
       openRate: it.OpenRate,
       tradeDate: it.TradeDate,
       volume: it.OverallTurnOverUnits,
-} as SecurityData;
-  })
-}
+    } as SecurityData;
+  });
+};

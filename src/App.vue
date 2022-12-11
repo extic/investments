@@ -20,7 +20,7 @@ import { generateChartPanes } from './chart/chart-generator.service';
 import HeaderBar from './components/HeaderBar.vue';
 import HoldingsTable from './components/HoldingsTable.vue';
 import SecurityChart from './components/SecurityChart.vue';
-import { getSecurityHistory } from './services/security-list.service';
+import { getSecurityHistory } from './services/tase.service';
 import { useSecurityListStore } from './store/security-list.store';
 import { useSetttingsStore } from './store/settings.store';
 import fs from "fs";
