@@ -4,8 +4,8 @@
     <table>
       <thead>
         <tr>
-          <th>מספר נייר</th>
-          <th>שם</th>
+          <th>Number</th>
+          <th>Name</th>
         </tr>
       </thead>
       <tbody>

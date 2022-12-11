@@ -1,5 +1,5 @@
 import SecurityListView from "@/views/SecurityListView.vue";
-import HoldingsView from "@/views/HoldingsView.vue";
+import PortfolioView from "@/views/PortfolioView.vue";
 import TrackingView from "@/views/TrackingView.vue";
 import { createMemoryHistory, createRouter, RouteRecordRaw } from "vue-router";
 
@@ -14,9 +14,9 @@ const routes: Array<RouteRecordRaw> = [
     component: SecurityListView,
   },
   {
-    path: "/holdings",
-    name: "holdings",
-    component: HoldingsView,
+    path: "/portfolio",
+    name: "portfolio",
+    component: PortfolioView,
   },
   {
     path: "/tracking",

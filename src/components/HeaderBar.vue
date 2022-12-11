@@ -1,20 +1,14 @@
 <template>
   <div class="header-bar">
     <nav class="tabs">
-      <router-link to="/security-list" active-class="aaa">
-        <div class="tab">
-          רשימת ניירות
-        </div>
+      <router-link to="/security-list">
+        <div class="tab">Stock List</div>
       </router-link>
-      <router-link to="/tracking" active-class="aaa">
-        <div class="tab">
-          מעקב
-        </div>
+      <router-link to="/tracking">
+        <div class="tab">Watchlist</div>
       </router-link>
-      <router-link to="/holdings" active-class="aaa">
-        <div class="tab">
-          תיק
-        </div>
+      <router-link to="/portfolio">
+        <div class="tab">Portfolio</div>
       </router-link>
     </nav>
     <div class="under-bar"></div>
