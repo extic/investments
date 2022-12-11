@@ -17,9 +17,6 @@ class ChartRecalculator {
     const quoteWidth = chartWidth / indexCount;
 
     store.setIndexes(Math.floor(endIndex - indexCount), endIndex, quoteWidth);
-
-    // console.log("recalcing", endIndex, scrollPosition, scrollLength, indexCount);
-    // console.log("recalcing", endIndex, scrollLength, indexCount);
   }
 }
 

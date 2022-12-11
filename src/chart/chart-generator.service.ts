@@ -18,7 +18,7 @@ class VolumeChartDescriptor implements ChartDescriptor {}
 
 export function generateChartPanes(data: SecurityData[]) {
   const store = useChartStore();
-  store.setSecurityData(data.reverse());
+  store.setSecurityData(data);
 
   const securityData = store.securityData;
 
@@ -30,6 +30,7 @@ export function generateChartPanes(data: SecurityData[]) {
 
   nextTick(() => {
     // store.setSecurityData(securityData);
+    store.setIndexes(0, 10, 10);
     store.setScroll(0, 1);
   });
 

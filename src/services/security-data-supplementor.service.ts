@@ -9,7 +9,7 @@ type SupplementedReturnType = {
 }
 
 export const supplementSecurityDataFile = async (dataFile: SecurityDataFile, securityNumber: string): Promise<SupplementedReturnType> => {
-    const currDate = moment(new Date).format('DD/MM/yyyy');
+    const currDate = moment().format('DD/MM/yyyy');
     if (dataFile.created === currDate) {
         return { modified: false, data: dataFile.data };
     }
@@ -17,17 +17,17 @@ export const supplementSecurityDataFile = async (dataFile: SecurityDataFile, sec
     const returnValue = [...dataFile.data];
 
     const dateMap = new Set<string>();
-    dataFile.data.forEach((it) => dateMap.add(it.tradeDate));
+    dataFile.data.forEach((it) => dateMap.add(it.tradeDateStr));
 
     let areAllNew = true;
     let pageNumber = 1;
     while (areAllNew && pageNumber < 6) {
         const newData = await getSecurityHistory(securityNumber, pageNumber);
         newData.forEach((newDataItem) => {
-            if (dateMap.has(newDataItem.tradeDate)) {
+            if (dateMap.has(newDataItem.tradeDateStr)) {
                 areAllNew = false;
             } else {
-                dateMap.add(newDataItem.tradeDate);
+                dateMap.add(newDataItem.tradeDateStr);
                 returnValue.push(newDataItem);
             }
         })

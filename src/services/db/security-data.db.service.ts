@@ -8,12 +8,22 @@ export type SecurityDataFile = {
     data: SecurityData[]
 }
 
+export type SavedSecurityData = Omit<SecurityData, "tradeDate">;
+
 export const readSecurityDataFile = (securityNumber: string): SecurityDataFile => {
-    return readFile<SecurityDataFile>(`security-data-${securityNumber}`);
+    const dataFile = readFile<SecurityDataFile>(`security-data-${securityNumber}`)
+    dataFile.data.forEach((it) => {
+        it.tradeDate = moment(it.tradeDateStr, 'DD/MM/YYYY');
+    });
+    return dataFile;
 }
 
 export const saveSecurityDataFile = (securityNumber: string, data: SecurityData[]) => {
-    const created = moment(new Date).format('DD/MM/yyyy');
-    return writeFile(`security-data-${securityNumber}`, { created, securityNumber, data });
+    const created = moment().format('DD/MM/yyyy');
+    const dataToSave = [...data].map((it) => {
+        let {tradeDate: _, ...rest} = it;
+        return rest as SavedSecurityData;
+    });
+    return writeFile(`security-data-${securityNumber}`, { created, securityNumber, data: dataToSave });
 }
 

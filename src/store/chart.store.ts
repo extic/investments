@@ -1,4 +1,5 @@
 import chartRecalculator from "@/chart/chart-calculator.service";
+import { Moment } from "moment";
 import { defineStore } from "pinia";
 import { ChartRenderer } from "../chart/chart.renderer";
 
@@ -8,7 +9,8 @@ export type SecurityData = {
   highRate: number;
   lowRate: number;
   openRate: number;
-  tradeDate: string;
+  tradeDate: Moment;
+  tradeDateStr: string;
   volume: number;
 }
 
@@ -55,8 +57,6 @@ export const useChartStore = defineStore("chart", {
       this._startIndex = startIndex;
       this._endIndex = endIndex;
       this._quoteWidth = quoteWidth;
-
-      // console.log(startIndex, endIndex, quoteWidth);
     },
 
     setChartRenderers(chartRenderers: ChartRenderer[]): void {

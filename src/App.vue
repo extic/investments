@@ -3,7 +3,7 @@
     <HeaderBar class="header"></HeaderBar>
     <div class="content">
       <router-view class="view" />
-      <div class="chart-container">
+      <div class="chart-root-container">
         <SecurityChart></SecurityChart>
       </div>
     </div>
@@ -39,7 +39,7 @@ onMounted(() => {
     flex-grow: 1;
     display: flex;
 
-    .chart-container {
+    .chart-root-container {
       width: 75%;
     }
 

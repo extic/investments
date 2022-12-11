@@ -20,10 +20,8 @@ export class StandingBarChartRenderer implements ChartRenderer {
     const width = ctx.canvas.width;
     const height = ctx.canvas.height;
 
-    // ctx.clearRect(0, 0, width, height);
     ctx.fillStyle = "blue";
 
-    // console.log("quoteWidth", quoteWidth);
     const { min, max } = this.findMinMax(startIndex, endIndex);
 
 

@@ -16,7 +16,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in portfolioItems" :key="item.id">
+        <tr v-for="item in portfolioItems" :key="item.id" @click="select(item)" :class="{'selected': item === selectedItem}">
           <td>{{ item.securityNumber }}</td>
           <td>{{ item.securityName }}</td>
           <td>{{ item.buyDate }}</td>
@@ -48,16 +48,25 @@
 </template>
 
 <script lang="ts">
-import { usePortfolioStore } from "@/store/portfolio.store";
+import { selectSecurity } from "@/services/security-selector.service";
+import { PortfolioItem, usePortfolioStore } from "@/store/portfolio.store";
 import { defineComponent, ref } from "vue";
 
 export default defineComponent({
   name: "PortfolioView",
 
   setup() {
+    const selectedItem = ref<PortfolioItem | undefined>();
+
     const portfolioStore = usePortfolioStore();
     const portfolioItems = portfolioStore.items
-    return { portfolioItems };
+
+    const select = async (item: PortfolioItem) => {
+      selectedItem.value = item;
+      await selectSecurity(item.securityNumber);
+    };
+
+    return { portfolioItems, selectedItem, select };
   },
 });
 </script>

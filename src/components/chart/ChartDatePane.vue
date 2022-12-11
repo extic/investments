@@ -81,7 +81,7 @@ export default defineComponent({
         ctx.lineTo(roundedPos, 5);
 
         if (i % textInterval === 0) {
-          const text = data[i].tradeDate
+          const text = data[i].tradeDateStr
           const metrics = ctx.measureText(text);
           ctx.fillText(text, pos - metrics.width / 2, 17);
         }

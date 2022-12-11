@@ -117,7 +117,6 @@ export default defineComponent({
     };
 
     const initScrolls = () => {
-      console.log("init");
       leftHandlePos.value = store.scrollPosition * scrollbar.value!!.offsetWidth;
       rightHandlePos.value = leftHandlePos.value + store.scrollLength * scrollbar.value!!.offsetWidth;
     };
