@@ -1,9 +1,8 @@
+import { Security } from "@/types/types";
 import { defineStore } from "pinia";
 
-export type PortfolioItem = {
+export type PortfolioItem = Security & {
   id: string;
-  securityNumber: string;
-  securityName: string;
   buyDate: string;
   buyPrice: number;
   quantity: number;

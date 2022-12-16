@@ -1,23 +1,26 @@
+import { Security } from "@/types/types";
 import { defineStore } from "pinia";
 
-export type Security = {
-  securityNumber: string;
-  securityName: string;
-  symbol: string;
-}
+export type SecurityListItem = Security
 
 export const useSecurityListStore = defineStore("securityList", {
   state: () => ({
-    _securityList: [] as Security[],
+    _list: [] as SecurityListItem[],
+    _selected: undefined as SecurityListItem | undefined,
   }),
 
   getters: {
-    securityList: (state): Security[] => state._securityList,
+    list: (state): SecurityListItem[] => state._list,
+    selected: (state): SecurityListItem | undefined => state._selected,
   },
 
   actions: {
-    setSecurityList(list: Security[]): void {
-      this._securityList = list;
+    setList(list: SecurityListItem[]): void {
+      this._list = list;
+    },
+
+    setSelected(selected: SecurityListItem | undefined): void {
+      this._selected = selected;
     },
   },
 });

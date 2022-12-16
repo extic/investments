@@ -1,11 +1,9 @@
 import { writeFile } from "@/services/file.service";
+import { Security } from "@/types/types";
 import { defineStore } from "pinia";
 
-export type WatchlistItem = {
+export type WatchlistItem = Security & {
   id: string;
-  securityNumber: string;
-  securityName: string;
-
 };
 
 export const useWatchlistStore = defineStore("Watchlist", {
@@ -23,7 +21,7 @@ export const useWatchlistStore = defineStore("Watchlist", {
     },
 
     add(item: WatchlistItem): void {
-      if (!this._items.find((it) => it.securityNumber === item.securityNumber)) {
+      if (!this._items.find((it) => it.number === item.number)) {
         this._items.push(item);
         writeFile(`watchlist`, this._items);
       }

@@ -10,18 +10,28 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="security in securityList" :key="security.securityNumber" @click="select(security)" :class="{'selected': security === selectedSecurity}">
+        <tr v-for="security in securityList" :key="security.number" @click="select(security)" :class="{ selected: security === selectedSecurity }">
           <td class="actions-row">
-            <button class="add-button" @click="addSecurity(security, $event)">
-              <img src="../assets/images/three-dots.svg" alt="add">
-            </button>
+            <div class="action-list">
+              <button class="action-button" @click="addSecurity(security, $event)">
+                <img src="../assets/images/three-dots.svg" alt="add" />
+              </button>
+              <button class="action-button" @click="showChart(security)">
+                <img src="../assets/images/stock-chart.svg" alt="add" />
+              </button>
+            </div>
           </td>
-          <td>{{ security.securityNumber }}</td>
-          <td>{{ security.securityName }}</td>
+          <td>{{ security.number }}</td>
+          <td>{{ security.name }}</td>
         </tr>
       </tbody>
     </table>
-    <div ref="addContextMenu" class="context-menu" :class="{'show': showContextMenu}" :style="{top: `${contextMenuTop}px`, left: `${contextMenuLeft}px`}">
+    <div
+      ref="addContextMenu"
+      class="context-menu"
+      :class="{ show: showContextMenu }"
+      :style="{ top: `${contextMenuTop}px`, left: `${contextMenuLeft}px` }"
+    >
       <ul>
         <li @click="addToPortfolio">Add to Protfolio</li>
         <li @click="track">Add to Watchlist</li>
@@ -32,32 +42,42 @@
 
 <script lang="ts">
 import { computed, defineComponent, ref } from "vue";
-import { Security, useSecurityListStore } from "@/store/security-list.store";
+import { SecurityListItem, useSecurityListStore } from "@/store/security-list.store";
 import { selectSecurity } from "@/services/security-selector.service";
 import { useWatchlistStore, WatchlistItem } from "@/store/watchlist.store";
 import { randomUUID } from "crypto";
+import { Security, SelectedSecurity } from "@/types/types";
+import { getSecurityList } from "@/services/tase.service";
+import { writeFile } from "@/services/file.service";
+import { useChartStore } from "@/store/chart.store";
 
 export default defineComponent({
   name: "SecurityListView",
 
   setup() {
     const securityListStore = useSecurityListStore();
+    const chartStore = useChartStore();
 
     const securityList = computed(() => {
-      return securityListStore.securityList;
+      return securityListStore.list;
     });
-    const selectedSecurity = ref<Security | undefined>();
 
-    // securityList.value = securityListStore.securityList
+    const selectedSecurity = computed(() => {
+      return securityListStore.selected;
+    });
 
     const refreshList = async () => {
-      // securityList.value = await getSecurityList();
-      // fs.writeFileSync("C:/programming/investments/src/data/security-list.data.json", JSON.stringify(securityList.value, null, 4));
+      const list = await getSecurityList();
+      await writeFile("security-list", list);
+      securityListStore.setList(list);
     };
 
-    const select = async (security: Security) => {
-      selectedSecurity.value = security;
-      await selectSecurity(security.securityNumber);
+    const select = async (security: SecurityListItem) => {
+      if (selectedSecurity.value === security) {
+        securityListStore.setSelected(undefined);
+      } else {
+        securityListStore.setSelected(security);
+      }
     };
 
     const showContextMenu = ref(false);
@@ -68,50 +88,84 @@ export default defineComponent({
       showContextMenu.value = true;
       contextMenuLeft.value = event.x;
       contextMenuTop.value = event.y;
-    }
+    };
+
+    const showChart = async (security: Security) => {
+      await selectSecurity(security);
+    };
 
     const addToPortfolio = () => {
       // const portfolioStore = usePortfolioStore();
       // portfolioStore.add(selectedSecurity.value);
       showContextMenu.value = false;
-    }
+    };
 
     const track = () => {
       const watchlistStore = useWatchlistStore();
       watchlistStore.add({
         id: randomUUID(),
-        securityNumber: selectedSecurity.value!!.securityNumber,
-        securityName: selectedSecurity.value!!.securityName,
+        number: selectedSecurity.value!!.number,
+        name: selectedSecurity.value!!.name,
       } as WatchlistItem);
       showContextMenu.value = false;
-    }
+    };
 
-    return { securityList, refreshList, select, selectedSecurity, addSecurity, addToPortfolio, track, showContextMenu, contextMenuLeft, contextMenuTop };
-  }
+    return {
+      securityList,
+      refreshList,
+      select,
+      selectedSecurity,
+      addSecurity,
+      addToPortfolio,
+      track,
+      showContextMenu,
+      contextMenuLeft,
+      contextMenuTop,
+      showChart,
+    };
+  },
 });
 </script>
 
 <style lang="scss" scoped>
 .security-list-view {
   @import "../styles/table.scss";
+  overflow: auto;
 
-  .add-button {
-    background-color: transparent;
-    border: none;
-    padding: 0;
-    margin: 0;
+  .actions-row {
+    width: 4em;
+    padding: 0.2em 0;
+    // padding: 0.2em 1em;
+  }
+
+  .action-list {
+    display: flex;
+    gap: 0.5em;
     opacity: 0;
-    display: block;
-    width: 100%;
+    justify-content: center;
 
+    .action-button {
+      background-color: transparent;
+      border: none;
+      padding: 0.2em;
+      margin: 0;
+      display: block;
+      cursor: pointer;
 
-    img {
-      width: 1em;
-      height: 1em;
+      &:hover {
+        background-color: #b9b9b9;
+        border-radius: 5px;
+      }
+
+      img {
+        width: 1em;
+        height: 1em;
+      }
     }
   }
 
-  tr:hover .add-button, tr.selected .add-button {
+  tr:hover .action-list,
+  tr.selected .action-list {
     opacity: 1;
   }
 
@@ -119,13 +173,6 @@ export default defineComponent({
     table-layout: fixed;
     width: 300px;
   }
-
-  .actions-row {
-    width: 3em;
-    padding: 0.4em 0;
-    // padding: 0.2em 1em;
-  }
-
 
   .context-menu {
     position: fixed;

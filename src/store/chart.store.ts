@@ -1,4 +1,5 @@
 import chartRecalculator from "@/chart/chart-calculator.service";
+import { SelectedSecurity } from "@/types/types";
 import { Moment } from "moment";
 import { defineStore } from "pinia";
 import { ChartRenderer } from "../chart/chart.renderer";
@@ -16,6 +17,7 @@ export type SecurityData = {
 
 export const useChartStore = defineStore("chart", {
   state: () => ({
+    _selectedSecurity: undefined as SelectedSecurity,
     _securityData: [] as SecurityData[],
     _scrollPosition: 0,
     _scrollLength: 1,
@@ -27,6 +29,7 @@ export const useChartStore = defineStore("chart", {
   }),
 
   getters: {
+    selectedSecurity: (state): SelectedSecurity => state._selectedSecurity,
     securityData: (state): SecurityData[] => state._securityData,
     scrollPosition: (state): number => state._scrollPosition,
     scrollLength: (state): number => state._scrollLength,
@@ -38,6 +41,10 @@ export const useChartStore = defineStore("chart", {
   },
 
   actions: {
+    setSelectedSecurity(selectedSecurity: SelectedSecurity): void {
+      this._selectedSecurity = selectedSecurity;
+    },
+
     setSecurityData(data: SecurityData[]): void {
       this._securityData = data;
     },

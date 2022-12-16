@@ -1,9 +1,9 @@
 import { ipcRenderer } from "electron";
 import { SecurityData } from "@/store/chart.store";
-import { Security } from "@/store/security-list.store";
 import moment from "moment";
+import { SecurityListItem } from "@/store/security-list.store";
 
-export const getSecurityList = async () => {
+export const getSecurityList = async (): Promise<SecurityListItem[]> => {
   const body = {
     dType: 1,
     TotalRec: 1,
@@ -15,10 +15,9 @@ export const getSecurityList = async () => {
   // console.log(response);
   return response.Items.map((it: any) => {
     return {
-      securityNumber: it.SecurityNumber,
-      securityName: it.ShortName,
-      symbol: it.Symbol,
-    } as Security;
+      number: it.SecurityNumber,
+      name: it.ShortName,
+    } as SecurityListItem;
   });
 };
 

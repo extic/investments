@@ -1,19 +1,13 @@
 <template>
   <div class="app">
     <HeaderBar class="header"></HeaderBar>
-    <div class="content">
-      <router-view class="view" />
-      <div class="chart-root-container">
-        <SecurityChart></SecurityChart>
-      </div>
-    </div>
+    <router-view class="view" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted } from "vue";
 import HeaderBar from "./components/HeaderBar.vue";
-import SecurityChart from "./components/SecurityChart.vue";
 import { initApp } from "./services/initializer.service";
 
 onMounted(() => {
@@ -35,18 +29,18 @@ onMounted(() => {
   flex-direction: column;
   font-size: 14px;
 
-  .content {
-    flex-grow: 1;
-    display: flex;
+  // .content {
+  //   flex-grow: 1;
+  //   display: flex;
 
-    .chart-root-container {
-      width: 75%;
-    }
+  //   // .chart-root-container {
+  //   //   width: 75%;
+  //   // }
 
-    .view {
-      width: 25%;
-      overflow: auto;
-    }
-  }
+  //   // .view {
+  //   //   width: 25%;
+  //   //   overflow: auto;
+  //   // }
+  // }
 }
 </style>

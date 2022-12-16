@@ -6,7 +6,7 @@ import { readFile } from "./file.service";
 export const initApp = () => {
   const securityListStore = useSecurityListStore();
   const securityList = readFile<Security[]>("security-list");
-  securityListStore.setSecurityList(securityList);
+  securityListStore.setList(securityList);
 
   const holdingsStore = usePortfolioStore();
   const holdings = readFile<PortfolioItem[]>("holdings");
