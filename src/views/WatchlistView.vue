@@ -3,14 +3,22 @@
     <table>
       <thead>
         <tr>
+          <th class="actions-column"></th>
           <th>Number</th>
           <th>Name</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="item in watchlistItems" :key="item.id" @click="select(item)" :class="{'selected': item === selectedItem}">
-          <td>{{ item.securityNumber }}</td>
-          <td>{{ item.securityName }}</td>
+          <td class="actions-column">
+            <div class="action-list">
+              <button class="action-button" @click="showChart(item)">
+                <img src="../assets/images/stock-chart.svg" alt="add" />
+              </button>
+            </div>
+          </td>
+          <td>{{ item.number }}</td>
+          <td>{{ item.name }}</td>
         </tr>
       </tbody>
     </table>
@@ -34,10 +42,14 @@ export default defineComponent({
 
     const select = async (item: WatchlistItem) => {
       selectedItem.value = item;
-      await selectSecurity(item.securityNumber);
+      await selectSecurity(item);
     };
 
-    return { watchlistItems, selectedItem, select };
+    const showChart = async (security: WatchlistItem) => {
+      await selectSecurity(security);
+    };
+
+    return { watchlistItems, selectedItem, select, showChart };
   },
 });
 </script>
@@ -45,5 +57,10 @@ export default defineComponent({
 <style lang="scss" scoped>
 .watchlist-view {
   @import "../styles/table.scss";
+  overflow: auto;
+
+  table {
+    width: 300px;
+  }
 }
 </style>

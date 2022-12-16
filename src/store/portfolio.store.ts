@@ -18,15 +18,21 @@ export type PortfolioItem = Security & {
 export const usePortfolioStore = defineStore("portfolio", {
   state: () => ({
     _items: [] as PortfolioItem[],
+    _selected: undefined as PortfolioItem | undefined,
   }),
 
   getters: {
     items: (state): PortfolioItem[] => state._items,
+    selected: (state): PortfolioItem | undefined => state._selected,
   },
 
   actions: {
     setItems(items: PortfolioItem[]): void {
       this._items = items;
+    },
+
+    setSelected(selected: PortfolioItem | undefined): void {
+      this._selected = selected;
     },
   },
 });

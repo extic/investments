@@ -4,14 +4,14 @@
     <table>
       <thead>
         <tr>
-          <th class="actions-row"></th>
+          <th class="actions-column"></th>
           <th>Number</th>
           <th>Name</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="security in securityList" :key="security.number" @click="select(security)" :class="{ selected: security === selectedSecurity }">
-          <td class="actions-row">
+          <td class="actions-column">
             <div class="action-list">
               <button class="action-button" @click="addSecurity(security, $event)">
                 <img src="../assets/images/three-dots.svg" alt="add" />
@@ -56,7 +56,6 @@ export default defineComponent({
 
   setup() {
     const securityListStore = useSecurityListStore();
-    const chartStore = useChartStore();
 
     const securityList = computed(() => {
       return securityListStore.list;
@@ -132,45 +131,7 @@ export default defineComponent({
   @import "../styles/table.scss";
   overflow: auto;
 
-  .actions-row {
-    width: 4em;
-    padding: 0.2em 0;
-    // padding: 0.2em 1em;
-  }
-
-  .action-list {
-    display: flex;
-    gap: 0.5em;
-    opacity: 0;
-    justify-content: center;
-
-    .action-button {
-      background-color: transparent;
-      border: none;
-      padding: 0.2em;
-      margin: 0;
-      display: block;
-      cursor: pointer;
-
-      &:hover {
-        background-color: #b9b9b9;
-        border-radius: 5px;
-      }
-
-      img {
-        width: 1em;
-        height: 1em;
-      }
-    }
-  }
-
-  tr:hover .action-list,
-  tr.selected .action-list {
-    opacity: 1;
-  }
-
   table {
-    table-layout: fixed;
     width: 300px;
   }
 

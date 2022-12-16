@@ -3,6 +3,7 @@
     <table>
       <thead>
         <tr>
+          <th class="actions-column"></th>
           <th>Number</th>
           <th>Name</th>
           <th>Buy Date</th>
@@ -17,8 +18,15 @@
       </thead>
       <tbody>
         <tr v-for="item in portfolioItems" :key="item.id" @click="select(item)" :class="{'selected': item === selectedItem}">
-          <td>{{ item.securityNumber }}</td>
-          <td>{{ item.securityName }}</td>
+          <td class="actions-column">
+            <div class="action-list">
+              <button class="action-button" @click="showChart(item)">
+                <img src="../assets/images/stock-chart.svg" alt="add" />
+              </button>
+            </div>
+          </td>
+          <td>{{ item.number }}</td>
+          <td>{{ item.name }}</td>
           <td>{{ item.buyDate }}</td>
           <td>{{ item.buyPrice }}</td>
           <td>{{ item.quantity }}</td>
@@ -63,10 +71,14 @@ export default defineComponent({
 
     const select = async (item: PortfolioItem) => {
       selectedItem.value = item;
-      await selectSecurity(item.securityNumber);
+      await selectSecurity(item);
     };
 
-    return { portfolioItems, selectedItem, select };
+    const showChart = async (security: PortfolioItem) => {
+      await selectSecurity(security);
+    };
+
+    return { portfolioItems, selectedItem, select, showChart };
   },
 });
 </script>
@@ -74,5 +86,10 @@ export default defineComponent({
 <style lang="scss" scoped>
 .portfolio-view {
   @import "../styles/table.scss";
+  overflow: auto;
+
+  table {
+    width: 1200px;
+  }
 }
 </style>

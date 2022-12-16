@@ -1,55 +1,92 @@
 table {
-    border-collapse: collapse;
+  border-collapse: collapse;
+  table-layout: fixed;
 
-    thead {
-      background-color: #421e4d;
-      color: white;
+  thead {
+    background-color: #421e4d;
+    color: white;
 
-      th {
-        border-left: 1px solid gray;
-        padding: 0.4em 1em;
-        font-weight: normal;
-        cursor: default;
+    th {
+      border-left: 1px solid gray;
+      padding: 0.4em 1em;
+      font-weight: normal;
+      cursor: default;
+    }
+  }
+
+  tbody {
+    tr {
+      &:nth-of-type(odd) {
+        background-color: #ebebeb;
+      }
+
+      &:hover {
+        background-color: #e3dee5;
+      }
+
+      &.selected {
+        background-color: #a193a6;
       }
     }
 
-    tbody {
-      tr {
-        &:nth-of-type(odd) {
-          background-color: #EBEBEB;
-        }
+    td {
+      padding: 0 2em;
+      white-space: nowrap;
+      cursor: default;
 
-        &:hover {
-          background-color: #E3DEE5;
-        }
+      .change-cell {
+        display: flex;
+        gap: 10px;
+      }
 
-        &.selected {
-          background-color: #A193A6;
-        }
-      }      
+      .arrow-up {
+        color: green;
+      }
 
-      td {
-        padding: 0 2em;
-        white-space: nowrap;
-        cursor: default;
+      .arrow-down {
+        color: red;
+      }
 
-        .change-cell {
-          display: flex;
-          gap: 10px;
-        }
-
-        .arrow-up {
-          color: green;
-        }
-
-        .arrow-down {
-          color: red;
-        }
-
-        .number {
-          direction: ltr;
-          text-align: right;
-        }
+      .number {
+        direction: ltr;
+        text-align: right;
       }
     }
   }
+
+  .actions-column {
+    width: 4em;
+    padding: 0.2em 0;
+  }  
+
+  .action-list {
+    display: flex;
+    gap: 0.5em;
+    opacity: 0;
+    justify-content: center;
+
+    .action-button {
+      background-color: transparent;
+      border: none;
+      padding: 0.2em;
+      margin: 0;
+      display: block;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #b9b9b9;
+        border-radius: 5px;
+      }
+
+      img {
+        width: 1em;
+        height: 1em;
+      }
+    }
+  }
+
+  tr:hover .action-list,
+  tr.selected .action-list {
+    opacity: 1;
+  }
+}
