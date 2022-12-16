@@ -1,6 +1,6 @@
-import SecurityListView from "@/views/SecurityListView.vue";
 import PortfolioView from "@/views/PortfolioView.vue";
-import TrackingView from "@/views/TrackingView.vue";
+import SecurityListView from "@/views/SecurityListView.vue";
+import WatchlistView from "@/views/WatchlistView.vue";
 import { createMemoryHistory, createRouter, RouteRecordRaw } from "vue-router";
 
 const routes: Array<RouteRecordRaw> = [
@@ -19,9 +19,9 @@ const routes: Array<RouteRecordRaw> = [
     component: PortfolioView,
   },
   {
-    path: "/tracking",
-    name: "tracking",
-    component: TrackingView,
+    path: "/watchlist",
+    name: "watchlist",
+    component: WatchlistView,
   },
   {
     path: "/:catchAll(.*)",

@@ -4,7 +4,7 @@
       <router-link to="/security-list">
         <div class="tab">Stock List</div>
       </router-link>
-      <router-link to="/tracking">
+      <router-link to="/watchlist">
         <div class="tab">Watchlist</div>
       </router-link>
       <router-link to="/portfolio">
