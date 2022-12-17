@@ -17,7 +17,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in portfolioItems" :key="item.id" @click="select(item)" :class="{'selected': item === selectedItem}">
+        <tr v-for="item in store.items" :key="item.id" @click="select(item)" :class="{'selected': item === store.selected}">
           <td class="actions-column">
             <div class="action-list">
               <button class="action-button" @click="showChart(item)">
@@ -58,27 +58,27 @@
 <script lang="ts">
 import { selectSecurity } from "@/services/security-selector.service";
 import { PortfolioItem, usePortfolioStore } from "@/store/portfolio.store";
-import { defineComponent, ref } from "vue";
+import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "PortfolioView",
 
   setup() {
-    const selectedItem = ref<PortfolioItem | undefined>();
-
-    const portfolioStore = usePortfolioStore();
-    const portfolioItems = portfolioStore.items
+    const store = usePortfolioStore();
 
     const select = async (item: PortfolioItem) => {
-      selectedItem.value = item;
-      await selectSecurity(item);
+      if (store.selected === item) {
+        store.setSelected(undefined);
+      } else {
+        store.setSelected(item);
+      }
     };
 
     const showChart = async (security: PortfolioItem) => {
       await selectSecurity(security);
     };
 
-    return { portfolioItems, selectedItem, select, showChart };
+    return { store, select, showChart };
   },
 });
 </script>

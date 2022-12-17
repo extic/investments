@@ -2,12 +2,14 @@ import { generateChartPanes } from "@/chart/chart-generator.service";
 import router from "@/router";
 import { useChartStore } from "@/store/chart.store";
 import { SelectedSecurity } from "@/types/types";
-import moment from "moment";
 import { readSecurityDataFile, saveSecurityDataFile, SecurityDataFile } from "./db/security-data.db.service";
 import { supplementSecurityDataFile } from "./security-data-supplementor.service";
 
 export const selectSecurity = async (selectedSecurity: SelectedSecurity): Promise<void> => {
   if (selectedSecurity) {
+    const chartStore = useChartStore();
+    chartStore.setSelectedSecurity(undefined);
+
     router.push("securityChart");
 
     const fileData = readDataFile(selectedSecurity.number);
@@ -18,9 +20,8 @@ export const selectSecurity = async (selectedSecurity: SelectedSecurity): Promis
         saveSecurityDataFile(selectedSecurity.number, newData);
     }
 
-    const chartStore = useChartStore();
-    chartStore.setSecurityData(newData);
     chartStore.setSelectedSecurity(selectedSecurity);
+    chartStore.setSecurityData(newData);
 
     generateChartPanes(newData);
   }

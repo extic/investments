@@ -12,7 +12,6 @@ export const getSecurityList = async (): Promise<SecurityListItem[]> => {
     lang: "0",
   };
   const response = await ipcRenderer.invoke("http:request", "https://api.tase.co.il/api/index/components", body);
-  // console.log(response);
   return response.Items.map((it: any) => {
     return {
       number: it.SecurityNumber,

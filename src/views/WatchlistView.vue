@@ -9,7 +9,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in watchlistItems" :key="item.id" @click="select(item)" :class="{'selected': item === selectedItem}">
+        <tr v-for="item in store.items" :key="item.id" @click="select(item)" :class="{'selected': item === store.selected}">
           <td class="actions-column">
             <div class="action-list">
               <button class="action-button" @click="showChart(item)">
@@ -29,27 +29,27 @@
 <script lang="ts">
 import { selectSecurity } from "@/services/security-selector.service";
 import { WatchlistItem, useWatchlistStore } from "@/store/watchlist.store";
-import { defineComponent, ref } from "vue";
+import { computed, defineComponent, ref } from "vue";
 
 export default defineComponent({
   name: "watchlistView",
 
   setup() {
-    const selectedItem = ref<WatchlistItem | undefined>();
-
-    const watchlistStore = useWatchlistStore();
-    const watchlistItems = watchlistStore.items
+    const store = useWatchlistStore();
 
     const select = async (item: WatchlistItem) => {
-      selectedItem.value = item;
-      await selectSecurity(item);
+      if (store.selected === item) {
+        store.setSelected(undefined);
+      } else {
+        store.setSelected(item);
+      }
     };
 
     const showChart = async (security: WatchlistItem) => {
       await selectSecurity(security);
     };
 
-    return { watchlistItems, selectedItem, select, showChart };
+    return { store, select, showChart };
   },
 });
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div class="security-chart">
     <div class="chart-container" :style="{ height: `${chartHeight}px` }">
-      <div class="chart-panel-container">
+      <div class="chart-panel-container" ref="chartPanelContainer">
         <div v-for="(renderer, index) in chartRenderers">
           <div v-if="(index !== 0)" class="separator"></div>
           <ChartPane :renderer="renderer"></ChartPane>
@@ -16,11 +16,12 @@
 <script lang="ts">
 import { sumBy } from "lodash";
 import { useChartStore } from "../store/chart.store";
-import { computed, defineComponent } from "vue";
+import { computed, defineComponent, onMounted, ref } from "vue";
 import { DATE_PANE_HEIGHT } from "./chart/chart.constants";
 import ChartDatePane from "./chart/ChartDatePane.vue";
 import ChartPane from "./chart/ChartPane.vue";
 import ChartScrollbar from "./chart/ChartScrollbar.vue";
+import { nextTick } from "process";
 
 export default defineComponent({
   name: "SecurityChart",
@@ -31,8 +32,13 @@ export default defineComponent({
     const store = useChartStore();
     const chartRenderers = computed(() => store.chartRenderers);
     const chartHeight = computed(() => sumBy(chartRenderers.value, (it) => it.getHeight()) + DATE_PANE_HEIGHT);
+    const chartPanelContainer = ref<HTMLDivElement>();
 
-    return { chartRenderers, chartHeight };
+    onMounted(() => {
+      store.setChartWidth(chartPanelContainer.value!!.offsetWidth);
+    })
+
+    return { chartRenderers, chartHeight, chartPanelContainer };
   },
 });
 </script>

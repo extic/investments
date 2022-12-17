@@ -26,6 +26,7 @@ export const useChartStore = defineStore("chart", {
     _endIndex: 0,
     _quoteWidth: 0,
     _chartRenderers: [] as ChartRenderer[],
+    _chartPaintTrigger: 0,
   }),
 
   getters: {
@@ -38,6 +39,7 @@ export const useChartStore = defineStore("chart", {
     endIndex: (state): number => state._endIndex,
     quoteWidth: (state): number => state._quoteWidth,
     chartRenderers: (state): ChartRenderer[] => state._chartRenderers,
+    chartPaintTrigger: (state): number => state._chartPaintTrigger,
   },
 
   actions: {
@@ -64,6 +66,7 @@ export const useChartStore = defineStore("chart", {
       this._startIndex = startIndex;
       this._endIndex = endIndex;
       this._quoteWidth = quoteWidth;
+      this._chartPaintTrigger++;
     },
 
     setChartRenderers(chartRenderers: ChartRenderer[]): void {

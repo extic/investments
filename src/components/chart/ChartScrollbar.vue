@@ -110,8 +110,6 @@ export default defineComponent({
         const scrollPosition = leftHandlePos.value!! / (scrollbar.value!!.offsetWidth - 50);
         const scrollLength = (rightHandlePos.value!! - leftHandlePos.value!! - 50) / (scrollbar.value!!.offsetWidth - 50);
 
-        // console.log(scrollPosition, scrollLength);
-
         store.setScroll(scrollPosition, scrollLength);
       }
     };

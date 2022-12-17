@@ -1,14 +1,20 @@
 <template>
   <div class="watchlist-view">
-    <SecurityChart></SecurityChart>
+    <div v-if="!selectedSecurity" class="loading">
+      <img src="../assets/images/loading.gif"/>
+      <div class="loading-title">Loading Chart...</div>
+    </div>
+    <SecurityChart v-else></SecurityChart>
   </div>
 
 </template>
 
 <script lang="ts">
 import { selectSecurity } from "@/services/security-selector.service";
+import { useChartStore } from "@/store/chart.store";
 import { WatchlistItem, useWatchlistStore } from "@/store/watchlist.store";
-import { defineComponent, ref } from "vue";
+import { SelectedSecurity } from "@/types/types";
+import { computed, defineComponent, ref } from "vue";
 import SecurityChart from "../components/SecurityChart.vue"
 
 export default defineComponent({
@@ -17,7 +23,10 @@ export default defineComponent({
   components: { SecurityChart },
 
   setup() {
-    // const selectedItem = ref<WatchlistItem | undefined>();
+    const chartStore = useChartStore();
+    const selectedSecurity = computed(() => {
+      return chartStore.selectedSecurity;
+    });
 
     // const watchlistStore = useWatchlistStore();
     // const watchlistItems = watchlistStore.items
@@ -28,7 +37,7 @@ export default defineComponent({
     // };
 
     // return { watchlistItems, selectedItem, select };
-    return {}
+    return { selectedSecurity }
   },
 });
 </script>
@@ -36,5 +45,17 @@ export default defineComponent({
 <style lang="scss" scoped>
 .watchlist-view {
   @import "../styles/table.scss";
+
+  .loading {
+    margin-top: 150px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    .loading-title {
+      margin-top: 1em;
+      font-size: 2em;
+    }
+  }
 }
 </style>

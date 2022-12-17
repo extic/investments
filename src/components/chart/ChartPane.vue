@@ -3,7 +3,7 @@
     <div class="chart-title">
       <div>הפועלים</div>
     </div>
-    <canvas ref="canvas" :width="paneWidth" :height="paneHeight"></canvas>
+    <canvas ref="canvas"></canvas>
   </div>
 </template>
 
@@ -30,15 +30,22 @@ export default defineComponent({
     const store = useChartStore();
 
     watch(
-      () => [store.startIndex, store.endIndex],
-      ([newStartIndex, newEndIndex]) => {
+      () => [store.chartPaintTrigger],
+      () => {
         const ctx = canvas.value!!.getContext("2d")!!;
+
+
+        // paneWidth.value = store.chartWidth;
+        paneHeight.value = props.renderer!!.getHeight();
+        ctx.canvas.width = store.chartWidth;
+        ctx.canvas.height = props.renderer!!.getHeight();
+        ctx.translate(-0.5, -0.5);
 
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
         ctx.strokeStyle = "lightgray";
         ctx.beginPath();
-        for (let i=0; i<(newEndIndex - newStartIndex); i += 5) {
+        for (let i=0; i<(store.endIndex - store.startIndex); i += 5) {
           const pos = Math.round(ctx.canvas.width - i * store.quoteWidth - store.quoteWidth / 2);
           ctx.moveTo(pos, 0);
           ctx.lineTo(pos, ctx.canvas.height);
@@ -46,19 +53,9 @@ export default defineComponent({
         ctx.closePath();
         ctx.stroke();
 
-        props.renderer!!.paint(ctx, newStartIndex, newEndIndex, store.quoteWidth);
+        props.renderer!!.paint(ctx, store.startIndex, store.endIndex, store.quoteWidth);
       }
     );
-
-    onMounted(() => {
-      paneWidth.value = pane.value!!.offsetWidth;
-      store.setChartWidth(paneWidth.value);
-      paneHeight.value = props.renderer!!.getHeight();
-      const ctx = canvas.value!!.getContext("2d")!!;
-      nextTick(() => {
-        ctx.translate(-0.5, -0.5);
-      });
-    });
 
     return { paneWidth, paneHeight, pane, canvas };
   },
