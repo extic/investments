@@ -2,7 +2,6 @@ import { Chart } from "@/chart/chart";
 import chartRecalculator from "@/chart/chart-calculator.service";
 import { SelectedSecurity } from "@/types/types";
 import { defineStore } from "pinia";
-import { ChartRenderer } from "../chart/chart.renderer";
 
 export type SecurityData = {
   closeRate: number;
@@ -19,6 +18,8 @@ export type QuotePosition = {
   date: number;
   pos: number;
   index: number | undefined;
+  major: boolean;
+  data: SecurityData | undefined;
 }
 
 export type RenderContext = {
@@ -36,11 +37,10 @@ export const useChartStore = defineStore("chart", {
     _startIndex: 0,
     _chartWidth: 0,
     _endIndex: 0,
+    _chartPaintTrigger: 0,
 
     _selectedSecurity: undefined as SelectedSecurity,
     _securityData: [] as SecurityData[],
-    _chartRenderers: [] as ChartRenderer[],
-    _chartPaintTrigger: 0,
     _charts: [] as Chart[],
     _fromPos: 0,
     _toPos: 0,
@@ -53,7 +53,6 @@ export const useChartStore = defineStore("chart", {
     scrollLength: (state): number => state._scrollLength,
     startIndex: (state): number => state._startIndex,
     endIndex: (state): number => state._endIndex,
-    chartRenderers: (state): ChartRenderer[] => state._chartRenderers,
     chartPaintTrigger: (state): number => state._chartPaintTrigger,
 
     selectedSecurity: (state): SelectedSecurity => state._selectedSecurity,
@@ -88,10 +87,6 @@ export const useChartStore = defineStore("chart", {
       this._chartPaintTrigger++;
     },
 
-    setChartRenderers(chartRenderers: ChartRenderer[]): void {
-      this._chartRenderers = chartRenderers;
-    },
-
     initCharts(fromPos: number, toPos: number, ...charts: Chart[]): void {
       this._fromPos = fromPos;
       this._toPos = toPos;
@@ -106,10 +101,5 @@ export const useChartStore = defineStore("chart", {
       this._renderContext = context;
       console.log(context);
     },
-
-    // initQuotePositions(quotePositions: QuotePosition[], quoteWidth: number): void {
-    //   this._quotePositions = quotePositions;
-    //   this._quoteWidth = quoteWidth;
-    // }
   },
 });

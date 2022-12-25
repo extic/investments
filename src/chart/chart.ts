@@ -1,5 +1,5 @@
-import { useChartStore } from "@/store/chart.store";
-import { maxBy, minBy } from "lodash";
+import { RenderContext, useChartStore } from "@/store/chart.store";
+import { minBy } from "lodash";
 import { Axis } from "./axis";
 import { Renderer } from "./renderer";
 
@@ -20,16 +20,37 @@ export class BasicChart implements Chart {
     const store = useChartStore();
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
+    const renderContext = store.renderContext;
+
+    this.drawVerticalLines(ctx, renderContext);
+    this.initializeAxes(ctx, renderContext);
+
+    this.renderers.forEach((renderer) => {
+      renderer.render(ctx, renderContext, ctx.canvas.height);
+    });
+  }
+
+  private drawVerticalLines(ctx: CanvasRenderingContext2D, renderContext: RenderContext) {
     ctx.strokeStyle = "lightgray";
     ctx.beginPath();
     ctx.moveTo(ctx.canvas.width - 100, 0);
     ctx.lineTo(ctx.canvas.width - 100, ctx.canvas.height);
-    ctx.closePath();
+    for (let i = 0; i < renderContext.quotePositions.length; i++) {
+      const quotePosition = renderContext.quotePositions[i];
+      if (quotePosition.major) {
+        const pos = quotePosition.pos;
+        ctx.moveTo(pos, 0);
+        ctx.lineTo(pos, ctx.canvas.height);
+      }
+    }
     ctx.stroke();
+  }
 
+  private initializeAxes(ctx: CanvasRenderingContext2D, renderContext: RenderContext) {
     this.renderers.forEach((renderer) => {
-      renderer.initAxis(store.renderContext, ctx.canvas.height);
+      renderer.initAxis(renderContext, ctx.canvas.height);
     });
+
     if (this.combinedRange) {
       const axes = this.renderers.map((it) => it.rangeAxis);
       const minValue = minBy(axes, (it) => it?.min)!!.min;
@@ -37,19 +58,5 @@ export class BasicChart implements Chart {
       const commonAxis = new Axis(minValue, maxValue, ctx.canvas.height);
       this.renderers.forEach((it) => it.rangeAxis = commonAxis);
     }
-
-    this.renderers.forEach((renderer) => {
-      renderer.render(ctx, store.renderContext, ctx.canvas.height);
-    });
-
-    // ctx.strokeStyle = "lightgray";
-    // ctx.beginPath();
-    // for (let i = 0; i < store.endIndex - store.startIndex; i += 5) {
-    //   const pos = Math.round(ctx.canvas.width - i * store.quoteWidth - store.quoteWidth / 2);
-    //   ctx.moveTo(pos, 0);
-    //   ctx.lineTo(pos, ctx.canvas.height);
-    // }
-    // ctx.closePath();
-    // ctx.stroke();
   }
 }
