@@ -1,44 +1,66 @@
+import { max, min } from "lodash";
 import { SecurityData, useChartStore } from "../store/chart.store";
-import { nextTick } from "vue";
-import { CandleStickDataProvider } from "./candlestick.data-provider";
-import { ChartRenderer } from "./chart.renderer";
-import { StandingBarChartRenderer } from "./standing-bar.chart-renderer";
-import { CandleStickChartRenderer } from "./candlestick.chart-renderer";
-import { VolumeDataProvider } from "./volume.data-provider";
+import { BasicChart, Chart } from "./chart";
+import { CandleStickDataProvider } from "./data-providers/candlestick.data-provider";
+import { CloseRateDataProvider } from "./data-providers/close-rate.data-provider";
+import { VolumeDataProvider } from "./data-providers/volume.data-provider";
+import { Renderer } from "./renderer";
+import { CandleStickRenderer } from "./renderers/candlestick.renderer";
+import { LineRenderer } from "./renderers/line.renderer";
+import { StandingBarsRenderer } from "./renderers/standing-bars.renderer";
 
+// export type PaneDescriptor = {
+//   height: number;
+//   descriptor: ChartDescriptor;
+// };
 
-export type PaneDescriptor = {
-  height: number;
-  descriptor: ChartDescriptor;
-};
+// interface ChartDescriptor {}
 
-interface ChartDescriptor {}
+// class VolumeChartDescriptor implements ChartDescriptor {}
 
-class VolumeChartDescriptor implements ChartDescriptor {}
-
-export function generateChartPanes(data: SecurityData[]) {
+export function generateCharts(data: SecurityData[]) {
   const store = useChartStore();
 
   const securityData = store.securityData;
 
   const candleStickData = new CandleStickDataProvider().provide(securityData);
+  const lineData = new CloseRateDataProvider().provide(securityData);
+  const mainRenderers: Renderer[] = [
+    new CandleStickRenderer(candleStickData),
+    new LineRenderer(lineData),
+  ];
+  const mainChart = new BasicChart(mainRenderers, true, 0.7);
+
   const volumeData = new VolumeDataProvider().provide(securityData);
-  const renderers: ChartRenderer[] = [new CandleStickChartRenderer(400, candleStickData), new StandingBarChartRenderer(200, volumeData)];
-  store.setChartRenderers(renderers);
+  const volumeRenderers: Renderer[] = [
+    new StandingBarsRenderer(volumeData)
+  ];
+  const volumeChart = new BasicChart(volumeRenderers, false, 0.3);
 
-  nextTick(() => {
-    // store.setSecurityData(securityData);
-    store.setIndexes(0, 10, 10);
-    store.setScroll(0, 1);
-  });
+  const { fromPos, toPos } = calcDomainPositions(securityData);
 
-  // return [{
-  //   height: 400,
-  //   descriptor: {} as VolumeChartDescriptor,
-  // }];
+  return store.initCharts(fromPos, toPos, mainChart, volumeChart);
+
+  // const candleStickData = new CandleStickDataProvider().provide(securityData);
+  // const volumeData = new VolumeDataProvider().provide(securityData);
+  // const renderers: ChartRenderer[] = [new CandleStickChartRenderer(400, candleStickData), new StandingBarChartRenderer(200, volumeData)];
+  // store.setChartRenderers(renderers);
+
+  // nextTick(() => {
+  //   // store.setSecurityData(securityData);
+  //   store.setIndexes(0, 10, 10);
+  //   store.setScroll(0, 1);
+  // });
 }
 
 export type MinMax = {
   min: number;
   max: number;
 };
+
+
+function calcDomainPositions(data: SecurityData[]): { fromPos: number, toPos: number } {
+  const toPos = data.length - 1;
+  const fromPos = Math.max(0, toPos - 70);
+  return { fromPos, toPos };
+}

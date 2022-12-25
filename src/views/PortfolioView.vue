@@ -67,12 +67,12 @@
 </template>
 
 <script lang="ts">
-import { selectSecurity } from "@/services/security-selector.service";
+import router from "@/router";
 import { getSecurityInfo } from "@/services/tase.service";
 import { PortfolioItem, usePortfolioStore } from "@/store/portfolio.store";
-import moment from "moment";
 import { defineComponent } from "vue";
 import { writeFile } from "../services/file.service";
+import { DateTime } from "luxon";
 
 export default defineComponent({
   name: "PortfolioView",
@@ -89,7 +89,7 @@ export default defineComponent({
     };
 
     const showChart = async (security: PortfolioItem) => {
-      await selectSecurity(security);
+      await router.push({ name: 'securityChart', params: { securityNumber: security.number }});
     };
 
     const refresh = async () => {
@@ -104,7 +104,7 @@ export default defineComponent({
         item.changeTodayPercentage = Math.round(((item.lastRate - info.baseRate) / info.baseRate) * 10000) / 100;
       });
 
-      store.setLastRefresh(moment().format("DD/MM/yyyy HH:mm:ss"));
+      store.setLastRefresh(DateTime.now().toFormat("dd/MM/yyyy HH:mm:ss"));
       writeFile("portfolio", store.portfolio);
     };
 

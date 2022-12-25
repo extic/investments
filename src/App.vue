@@ -1,8 +1,6 @@
 <template>
-  <div class="app">
-    <HeaderBar class="header"></HeaderBar>
-    <router-view class="view" />
-  </div>
+  <HeaderBar class="header"></HeaderBar>
+  <router-view class="view" />
 </template>
 
 <script setup lang="ts">
@@ -16,31 +14,31 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
-.app {
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   font-size: 14px;
+  box-sizing: border-box;
+  overflow: hidden;
 
-  // .content {
-  //   flex-grow: 1;
-  //   display: flex;
+  .header {
+    height: 3em;
+  }
 
-  //   // .chart-root-container {
-  //   //   width: 75%;
-  //   // }
-
-  //   // .view {
-  //   //   width: 25%;
-  //   //   overflow: auto;
-  //   // }
-  // }
+  .view {
+    height: calc(100% - 3em);
+  }
 }
 </style>

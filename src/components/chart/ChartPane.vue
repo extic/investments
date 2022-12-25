@@ -1,8 +1,8 @@
 <template>
-  <div class="chart-pane" ref="pane" :style="{ height: `${paneHeight}px` }">
-    <div class="chart-title">
+  <div class="chart-pane" ref="pane">
+    <!-- <div class="chart-title">
       <div>הפועלים</div>
-    </div>
+    </div> -->
     <canvas ref="canvas"></canvas>
   </div>
 </template>
@@ -12,13 +12,14 @@ import { defineComponent, onMounted, PropType, ref, watch } from "vue";
 import { ChartRenderer } from "@/chart/chart.renderer";
 import { useChartStore } from "@/store/chart.store";
 import { nextTick } from "process";
+import { Chart } from "@/chart/chart";
 
 export default defineComponent({
   name: "ChartPane",
 
   props: {
-    renderer: {
-      type: Object as PropType<ChartRenderer>,
+    chart: {
+      type: Object as PropType<Chart>,
     }
   },
 
@@ -28,42 +29,52 @@ export default defineComponent({
     const paneHeight = ref(0);
     const canvas = ref<HTMLCanvasElement>();
     const store = useChartStore();
+    const chart = props.chart!!;
+
+    onMounted(() => {
+      canvas.value!!.width = pane.value!!.offsetWidth;
+      canvas.value!!.height = pane.value!!.offsetHeight;
+      const ctx = canvas.value!!.getContext("2d")!!;
+      ctx.translate(0.5, 0.5);
+    });
 
     watch(
-      () => [store.chartPaintTrigger],
+      () => [store.renderContext],
       () => {
         const ctx = canvas.value!!.getContext("2d")!!;
 
 
-        // paneWidth.value = store.chartWidth;
-        paneHeight.value = props.renderer!!.getHeight();
-        ctx.canvas.width = store.chartWidth;
-        ctx.canvas.height = props.renderer!!.getHeight();
-        ctx.translate(-0.5, -0.5);
+    //     // paneWidth.value = store.chartWidth;
+    //     paneHeight.value = props.renderer!!.getHeight();
+    //     ctx.canvas.width = store.chartWidth;
+    //     ctx.canvas.height = props.renderer!!.getHeight();
+    //     ctx.translate(-0.5, -0.5);
 
-        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        // ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-        ctx.strokeStyle = "lightgray";
-        ctx.beginPath();
-        for (let i=0; i<(store.endIndex - store.startIndex); i += 5) {
-          const pos = Math.round(ctx.canvas.width - i * store.quoteWidth - store.quoteWidth / 2);
-          ctx.moveTo(pos, 0);
-          ctx.lineTo(pos, ctx.canvas.height);
-        }
-        ctx.closePath();
-        ctx.stroke();
+    //     ctx.strokeStyle = "lightgray";
+    //     ctx.beginPath();
+    //     for (let i=0; i<(store.endIndex - store.startIndex); i += 5) {
+    //       const pos = Math.round(ctx.canvas.width - i * store.quoteWidth - store.quoteWidth / 2);
+    //       ctx.moveTo(pos, 0);
+    //       ctx.lineTo(pos, ctx.canvas.height);
+    //     }
+    //     ctx.closePath();
+    //     ctx.stroke();
 
-        props.renderer!!.paint(ctx, store.startIndex, store.endIndex, store.quoteWidth);
-      }
-    );
+        // props.chart!!.renderers!!.paint(ctx, store.startIndex, store.endIndex, store.quoteWidth);
+        props.chart!!.render(ctx);
+    //   }
+    });
 
-    return { paneWidth, paneHeight, pane, canvas };
+    return { paneWidth, paneHeight, pane, canvas, chart };
   },
 });
 </script>
 
 <style lang="scss" scoped>
 .chart-pane {
+  // border: 1px solid red;
   position: relative;
   .chart-title {
     position: absolute;

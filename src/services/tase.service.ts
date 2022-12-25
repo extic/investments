@@ -1,8 +1,8 @@
 import { ipcRenderer } from "electron";
 import { SecurityData } from "@/store/chart.store";
-import moment from "moment";
 import { SecurityListItem } from "@/store/security-list.store";
 import { SecurityInfo } from "@/store/portfolio.store";
+import { DateTime } from "luxon";
 
 export const getSecurityList = async (): Promise<SecurityListItem[]> => {
   const body = {
@@ -37,7 +37,7 @@ export const getSecurityHistory = async (securityNumber: string, pageNumber: num
       highRate: it.HighRate,
       lowRate: it.LowRate,
       openRate: it.OpenRate,
-      tradeDate: moment(it.TradeDate, 'DD/MM/YYYY'),
+      tradeDate: DateTime.fromFormat(it.TradeDate, 'dd/MM/yyyy').toUTC().toMillis(),
       tradeDateStr: it.TradeDate,
       volume: it.OverallTurnOverUnits,
     } as SecurityData;

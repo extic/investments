@@ -1,5 +1,5 @@
 import { SecurityData } from "@/store/chart.store";
-import moment from "moment";
+import { DateTime } from "luxon";
 import { SecurityDataFile } from "./db/security-data.db.service";
 import { getSecurityHistory } from "./tase.service";
 
@@ -9,7 +9,7 @@ type SupplementedReturnType = {
 }
 
 export const supplementSecurityDataFile = async (dataFile: SecurityDataFile, securityNumber: string): Promise<SupplementedReturnType> => {
-    const currDate = moment().format('DD/MM/yyyy');
+    const currDate = DateTime.now().toFormat('dd/MM/yyyy');
     if (dataFile.created === currDate) {
         return { modified: false, data: dataFile.data };
     }

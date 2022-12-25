@@ -49,7 +49,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .header-bar {
-  height: 3em;
+  // height: 3em;
 
   .tabs {
     display: flex;

@@ -41,15 +41,14 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from "vue";
-import { SecurityListItem, useSecurityListStore } from "@/store/security-list.store";
-import { selectSecurity } from "@/services/security-selector.service";
-import { useWatchlistStore, WatchlistItem } from "@/store/watchlist.store";
-import { randomUUID } from "crypto";
-import { Security, SelectedSecurity } from "@/types/types";
-import { getSecurityList } from "@/services/tase.service";
+import router from "@/router";
 import { writeFile } from "@/services/file.service";
-import { useChartStore } from "@/store/chart.store";
+import { getSecurityList } from "@/services/tase.service";
+import { SecurityListItem, useSecurityListStore } from "@/store/security-list.store";
+import { WatchlistItem, useWatchlistStore } from "@/store/watchlist.store";
+import { Security } from "@/types/types";
+import { randomUUID } from "crypto";
+import { computed, defineComponent, ref } from "vue";
 
 export default defineComponent({
   name: "SecurityListView",
@@ -90,7 +89,7 @@ export default defineComponent({
     };
 
     const showChart = async (security: Security) => {
-      await selectSecurity(security);
+      await router.push({ name: 'securityChart', params: { securityNumber: security.number }});
     };
 
     const addToPortfolio = () => {

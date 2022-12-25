@@ -1,27 +1,24 @@
 <template>
-  <div class="security-chart">
-    <div class="chart-container" :style="{ height: `${chartHeight}px` }">
-      <div class="chart-panel-container" ref="chartPanelContainer">
-        <div v-for="(renderer, index) in chartRenderers">
-          <div v-if="(index !== 0)" class="separator"></div>
-          <ChartPane :renderer="renderer"></ChartPane>
-        </div>
-      </div>
-      <ChartDatePane></ChartDatePane>
+  <div class="chart-container" ref="chartContainer">
+    <div class="chart-pane-container" ref="chartPanelContainer">
+      <template v-for="(chart, index) in charts">
+        <div v-if="(index !== 0)" class="separator"></div>
+        <ChartPane class="chart-pane" :style="{height: `${calcHeight(chart, index !== charts.length - 1)}`}" :chart="chart"></ChartPane>
+      </template>
     </div>
-    <ChartScrollbar></ChartScrollbar>
+    <ChartDatePane></ChartDatePane>
   </div>
+  <!-- <ChartScrollbar></ChartScrollbar> -->
 </template>
 
 <script lang="ts">
-import { sumBy } from "lodash";
-import { useChartStore } from "../store/chart.store";
+import { Chart } from "@/chart/chart";
+import { createRenderContext } from "@/chart/render-context-calculator";
 import { computed, defineComponent, onMounted, ref } from "vue";
-import { DATE_PANE_HEIGHT } from "./chart/chart.constants";
+import { useChartStore } from "../store/chart.store";
 import ChartDatePane from "./chart/ChartDatePane.vue";
 import ChartPane from "./chart/ChartPane.vue";
 import ChartScrollbar from "./chart/ChartScrollbar.vue";
-import { nextTick } from "process";
 
 export default defineComponent({
   name: "SecurityChart",
@@ -30,31 +27,47 @@ export default defineComponent({
 
   setup() {
     const store = useChartStore();
-    const chartRenderers = computed(() => store.chartRenderers);
-    const chartHeight = computed(() => sumBy(chartRenderers.value, (it) => it.getHeight()) + DATE_PANE_HEIGHT);
+    const charts = computed(() => store.charts);
+    const chartContainer = ref<HTMLDivElement>();
     const chartPanelContainer = ref<HTMLDivElement>();
 
+    const calcHeight = (chart: Chart, isLast: boolean) => {
+      return `calc(${chart.heightRatio * 100}% - ${isLast ? 0 : (charts.value.length - 1) * 5}px`;
+    };
+
     onMounted(() => {
-      store.setChartWidth(chartPanelContainer.value!!.offsetWidth);
+      const chartWidth = chartPanelContainer.value!!.offsetWidth;
+      store.setChartWidth(chartWidth);
+
+      const renderContext = createRenderContext(store.fromPos, store.toPos, chartWidth, store.securityData);
+      store.setRenderContext(renderContext);
     })
 
-    return { chartRenderers, chartHeight, chartPanelContainer };
+    return { chartPanelContainer, chartContainer, charts, calcHeight };
   },
 });
 </script>
 
 <style lang="scss" scoped>
-.security-chart {
-  border: 1px solid black;
+.chart-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 
-  .chart-container {
-    position: relative;
-    // height: 400px;
+  .chart-pane-container {
+    width: 100%;
+    height: calc(100% - 21px);
+    display: flex;
+    flex-direction: column;
 
-    .chart-panel-container {
-      .separator {
-        border-top: 1px solid lightgray;
-      }
+    .separator {
+      border-bottom: 1px solid gray;
+      height: 5px;
+      background-color: lightgray;
+      border-top: 1px solid gray;
+      box-sizing: border-box;
+      // height: 1px;
     }
   }
 }

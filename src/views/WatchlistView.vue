@@ -27,9 +27,9 @@
 </template>
 
 <script lang="ts">
-import { selectSecurity } from "@/services/security-selector.service";
+import router from "@/router";
 import { WatchlistItem, useWatchlistStore } from "@/store/watchlist.store";
-import { computed, defineComponent, ref } from "vue";
+import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "watchlistView",
@@ -46,7 +46,7 @@ export default defineComponent({
     };
 
     const showChart = async (security: WatchlistItem) => {
-      await selectSecurity(security);
+      await router.push({ name: 'securityChart', params: { securityNumber: security.number }});
     };
 
     return { store, select, showChart };
