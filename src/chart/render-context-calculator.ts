@@ -11,7 +11,7 @@ export function createRenderContext(fromPos: number, toPos: number, width: numbe
     return {
       date: it.tradeDate,
       index: index + fromIndex + 1,
-      pos: Math.round((index + 1) * ratio - quoteWidth / 2),
+      pos: Math.round((index + 1 + (fromIndex - fromPos)) * ratio - quoteWidth / 2),
       major: false,
       data: securityData
     } as QuotePosition;
@@ -21,8 +21,6 @@ export function createRenderContext(fromPos: number, toPos: number, width: numbe
   for (let i = positions.length - 1; i >= 0; i -= majorInterval) {
     positions[i].major = true;
   }
-
-  console.log(majorInterval, positions);
 
   return { quoteWidth, fromIndex, toIndex, quotePositions: positions, width};
 }

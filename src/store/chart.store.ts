@@ -93,13 +93,17 @@ export const useChartStore = defineStore("chart", {
       this._charts = charts;
     },
 
+    setPositions(fromPos: number, toPos: number): void {
+      this._fromPos = fromPos;
+      this._toPos = toPos;
+    },
+
     setChartWidth(width: number): void {
       this._chartWidth = width;
     },
 
     setRenderContext(context: RenderContext): void {
       this._renderContext = context;
-      console.log(context);
     },
   },
 });

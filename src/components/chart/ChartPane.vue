@@ -3,7 +3,7 @@
     <!-- <div class="chart-title">
       <div>הפועלים</div>
     </div> -->
-    <canvas ref="canvas"></canvas>
+    <canvas ref="canvas" @wheel="wheelMoved"></canvas>
   </div>
 </template>
 
@@ -11,6 +11,7 @@
 import { defineComponent, onMounted, PropType, ref, watch } from "vue";
 import { useChartStore } from "@/store/chart.store";
 import { Chart } from "@/chart/chart";
+import { createRenderContext } from "@/chart/render-context-calculator";
 
 export default defineComponent({
   name: "ChartPane",
@@ -29,11 +30,21 @@ export default defineComponent({
     const store = useChartStore();
     const chart = props.chart!!;
 
+    const wheelMoved = (event: WheelEvent) => {
+      const delta = (store.toPos - store.fromPos) / 30;
+      const direction = event.deltaY > 0 ? delta : -delta;
+      const newFromPos = store.fromPos + (event.shiftKey ? -direction : -direction);
+      const newToPos = store.toPos + (event.shiftKey ? -direction : direction);;
+      store.setPositions(newFromPos, newToPos);
+    }
+
     onMounted(() => {
       canvas.value!!.width = pane.value!!.offsetWidth;
       canvas.value!!.height = pane.value!!.offsetHeight;
       const ctx = canvas.value!!.getContext("2d")!!;
       ctx.translate(0.5, 0.5);
+
+      props.chart!!.render(ctx);
     });
 
     watch(
@@ -43,7 +54,7 @@ export default defineComponent({
         props.chart!!.render(ctx);
     });
 
-    return { paneWidth, paneHeight, pane, canvas, chart };
+    return { paneWidth, paneHeight, pane, canvas, chart, wheelMoved };
   },
 });
 </script>

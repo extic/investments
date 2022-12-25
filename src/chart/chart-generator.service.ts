@@ -40,17 +40,6 @@ export function generateCharts(data: SecurityData[]) {
   const { fromPos, toPos } = calcDomainPositions(securityData);
 
   return store.initCharts(fromPos, toPos, mainChart, volumeChart);
-
-  // const candleStickData = new CandleStickDataProvider().provide(securityData);
-  // const volumeData = new VolumeDataProvider().provide(securityData);
-  // const renderers: ChartRenderer[] = [new CandleStickChartRenderer(400, candleStickData), new StandingBarChartRenderer(200, volumeData)];
-  // store.setChartRenderers(renderers);
-
-  // nextTick(() => {
-  //   // store.setSecurityData(securityData);
-  //   store.setIndexes(0, 10, 10);
-  //   store.setScroll(0, 1);
-  // });
 }
 
 export type MinMax = {

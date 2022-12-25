@@ -14,7 +14,7 @@
 <script lang="ts">
 import { Chart } from "@/chart/chart";
 import { createRenderContext } from "@/chart/render-context-calculator";
-import { computed, defineComponent, onMounted, ref } from "vue";
+import { computed, defineComponent, onMounted, ref, watch } from "vue";
 import { useChartStore } from "../store/chart.store";
 import ChartDatePane from "./chart/ChartDatePane.vue";
 import ChartPane from "./chart/ChartPane.vue";
@@ -35,12 +35,16 @@ export default defineComponent({
       return `calc(${chart.heightRatio * 100}% - ${isLast ? 0 : (charts.value.length - 1) * 5}px`;
     };
 
+    watch(
+      () => [store.fromPos, store.toPos],
+      () => {
+        const renderContext = createRenderContext(store.fromPos, store.toPos, store.chartWidth, store.securityData);
+        store.setRenderContext(renderContext);
+    });
+
     onMounted(() => {
       const chartWidth = chartPanelContainer.value!!.offsetWidth;
       store.setChartWidth(chartWidth);
-
-      const renderContext = createRenderContext(store.fromPos, store.toPos, chartWidth, store.securityData);
-      store.setRenderContext(renderContext);
     })
 
     return { chartPanelContainer, chartContainer, charts, calcHeight };

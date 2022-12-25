@@ -18,6 +18,7 @@ import { useSecurityListStore } from "@/store/security-list.store";
 import { computed, defineComponent, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import SecurityChart from "../components/SecurityChart.vue";
+import { nextTick } from "process";
 
 export default defineComponent({
   name: "SecurityChartView",
@@ -60,7 +61,9 @@ export default defineComponent({
       chartStore.setSelectedSecurity(security);
       chartStore.setSecurityData(newData);
 
-      generateCharts(newData);
+      nextTick(() => {
+        generateCharts(newData);
+      })
     });
 
     return { selectedSecurity }
