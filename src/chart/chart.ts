@@ -31,7 +31,7 @@ export class BasicChart implements Chart {
     this.renderers.forEach((renderer) => {
       renderer.render(ctx, renderContext, ctx.canvas.height);
     });
-    store.drawings.forEach((drawing) => {
+    store.drawings.filter((it) => it.chartName === this.name).forEach((drawing) => {
       drawing.render(ctx, renderContext, ctx.canvas.height, this.renderers[0].rangeAxis!!);
     });
   }

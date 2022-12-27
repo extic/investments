@@ -52,7 +52,7 @@ export default defineComponent({
       const drawingDataFile = readDrawingDataFile(securityNumber);
       const drawings = drawingDataFile.drawings.map((it) => {
         if (it.type === 'line') {
-          return new LineDrawing(it.data);
+          return new LineDrawing(it.chartName, it.data);
         }
         throw Error(`Unknown type of drawing: ${it.type}`);
       })

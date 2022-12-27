@@ -22,6 +22,7 @@ export type DrawingDataFile = {
 
 export type DrawingData = {
   type: string;
+  chartName: string;
   data: LineDrawingData
 }
 

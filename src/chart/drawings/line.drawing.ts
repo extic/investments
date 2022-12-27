@@ -8,10 +8,7 @@ export type LineDrawingData = {
 }
 
 export class LineDrawing implements Drawing {
-  // private point1: Point = { x: 0, y: 63830 }
-  // private point2: Point = { x: 3, y: 68050 }
-
-  constructor(private readonly data: LineDrawingData) {}
+  constructor(public readonly chartName: string, private readonly data: LineDrawingData) {}
 
   render(ctx: CanvasRenderingContext2D, context: RenderContext, canvasHeight: number, rangeAxis: Axis): void {
     const handle1PosX = context.domainAxis.toCanvas(this.data.handles[0].x);
