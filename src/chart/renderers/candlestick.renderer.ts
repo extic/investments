@@ -1,6 +1,6 @@
 import { RenderContext } from "@/store/chart.store";
 import { maxBy, minBy } from "lodash";
-import { Axis } from "../axis";
+import { RangeAxis } from "../axis";
 import { CandleStickData } from "../data-providers/candlestick.data-provider";
 import { Renderer } from "../renderer";
 
@@ -14,7 +14,7 @@ export class CandleStickRenderer extends Renderer {
 
     const minValue = minBy(slicedData, (it) => it.low)!!.low;
     const maxValue = maxBy(slicedData, (it) => it.high)!!.high;
-    this.rangeAxis = new Axis(minValue, maxValue, canvasHeight);
+    this.rangeAxis = new RangeAxis(minValue, maxValue, canvasHeight);
   }
 
   render(ctx: CanvasRenderingContext2D, context: RenderContext): void {

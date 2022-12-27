@@ -1,7 +1,6 @@
 import { RenderContext } from "@/store/chart.store";
 import { max } from "lodash";
-import { Axis } from "../axis";
-import { MinMax } from "../chart-generator.service";
+import { RangeAxis } from "../axis";
 import { Renderer } from "../renderer";
 
 export class StandingBarsRenderer extends Renderer {
@@ -11,7 +10,7 @@ export class StandingBarsRenderer extends Renderer {
 
   initAxis(context: RenderContext, canvasHeight: number): void {
     const maxValue = max(this.data.slice(context.fromIndex, context.toIndex + 1))!!
-    this.rangeAxis = new Axis(0, maxValue, canvasHeight);
+    this.rangeAxis = new RangeAxis(0, maxValue, canvasHeight);
   }
 
   render(ctx: CanvasRenderingContext2D, context: RenderContext, canvasHeight: number): void {

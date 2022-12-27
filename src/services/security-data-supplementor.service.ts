@@ -1,33 +1,34 @@
-import { SecurityData } from "@/store/chart.store";
+import { Quote } from "@/store/chart.store";
 import { DateTime } from "luxon";
-import { SecurityDataFile } from "./db/security-data.db.service";
+import { QuoteDataFile } from "./db/security-data.db.service";
 import { getSecurityHistory } from "./tase.service";
 
 type SupplementedReturnType = {
     modified: boolean;
-    data: SecurityData[]
+    quotes: Quote[]
 }
 
-export const supplementSecurityDataFile = async (dataFile: SecurityDataFile, securityNumber: string): Promise<SupplementedReturnType> => {
+export const supplementSecurityDataFile = async (dataFile: QuoteDataFile, securityNumber: string): Promise<SupplementedReturnType> => {
     const currDate = DateTime.now().toFormat('dd/MM/yyyy');
-    if (dataFile.created === currDate) {
-        return { modified: false, data: dataFile.data };
+    const lastUpdated = dataFile.lastUpdated === 'never' ? 'never' : DateTime.fromFormat(dataFile.lastUpdated, 'dd/MM/yyyy HH:mm:ss').toFormat('dd/MM/yyyy')
+    if (lastUpdated === currDate) {
+        return { modified: false, quotes: dataFile.quotes };
     }
 
-    const returnValue = [...dataFile.data];
+    const returnValue = [...dataFile.quotes];
 
     const dateMap = new Set<string>();
-    dataFile.data.forEach((it) => dateMap.add(it.tradeDateStr));
+    dataFile.quotes.forEach((it) => dateMap.add(it.tradeDate));
 
     let areAllNew = true;
     let pageNumber = 1;
     while (areAllNew && pageNumber < 6) {
         const newData = await getSecurityHistory(securityNumber, pageNumber);
         newData.forEach((newDataItem) => {
-            if (dateMap.has(newDataItem.tradeDateStr)) {
+            if (dateMap.has(newDataItem.tradeDate)) {
                 areAllNew = false;
             } else {
-                dateMap.add(newDataItem.tradeDateStr);
+                dateMap.add(newDataItem.tradeDate);
                 returnValue.push(newDataItem);
             }
         })
@@ -36,6 +37,6 @@ export const supplementSecurityDataFile = async (dataFile: SecurityDataFile, sec
 
     return {
       modified: true,
-      data: returnValue,
+      quotes: returnValue,
     };
 }

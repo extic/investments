@@ -1,19 +1,19 @@
-import { QuotePosition, RenderContext, SecurityData } from "../store/chart.store";
+import { Quote, QuotePosition, RenderContext } from "../store/chart.store";
+import { DomainAxis } from "./axis";
 
-export function createRenderContext(fromPos: number, toPos: number, width: number, data: SecurityData[]): RenderContext {
+export function createRenderContext(fromPos: number, toPos: number, width: number, quotes: Quote[]): RenderContext {
   const fromIndex = Math.max(0, Math.floor(fromPos));
-  const toIndex = Math.min(data.length - 1, Math.ceil(toPos));
+  const toIndex = Math.min(quotes.length - 1, Math.ceil(toPos));
   const quoteWidth = (width - 100) / (toPos - fromPos)
   const ratio = (width - 100) / (toPos - fromPos);
 
-  const positions = data.slice(fromIndex + 1, toIndex + 1).map((it, index) => {
-    const securityData = data[index];
+  const positions = quotes.slice(fromIndex, toIndex + 1).map((it, index) => {
     return {
-      date: it.tradeDate,
-      index: index + fromIndex + 1,
-      pos: Math.round((index + 1 + (fromIndex - fromPos)) * ratio - quoteWidth / 2),
+      date: it.tradeDateMillis,
+      index: index + fromIndex,
+      pos: Math.round((index  + (fromIndex - fromPos)) * ratio),
       major: false,
-      data: securityData
+      quote: quotes[index + fromIndex],
     } as QuotePosition;
   });
 
@@ -22,7 +22,9 @@ export function createRenderContext(fromPos: number, toPos: number, width: numbe
     positions[i].major = true;
   }
 
-  return { quoteWidth, fromIndex, toIndex, quotePositions: positions, width};
+  const domainAxis = new DomainAxis(fromPos, toPos, width - 100);
+
+  return { quoteWidth, fromIndex, toIndex, quotePositions: positions, width, domainAxis};
 }
 
 const getMajorInterval = (width: number) => {

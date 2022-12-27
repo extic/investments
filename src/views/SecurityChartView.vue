@@ -1,24 +1,23 @@
 <template>
   <div class="security-chart-view">
     <div v-if="!selectedSecurity" class="loading">
-      <img src="../assets/images/loading.gif"/>
+      <img src="../assets/images/loading.gif" />
       <div class="loading-title">Loading Chart...</div>
     </div>
     <SecurityChart v-else></SecurityChart>
   </div>
-
 </template>
 
 <script lang="ts">
-import { generateCharts } from "@/chart/chart-generator.service";
-import { SecurityDataFile, readSecurityDataFile, saveSecurityDataFile } from "@/services/db/security-data.db.service";
+import { assureSecurityFolderExists, readMetaDataFile, readQuotesDataFile, saveQuotesDataFile, readDrawingDataFile } from "@/services/db/security-data.db.service";
 import { supplementSecurityDataFile } from "@/services/security-data-supplementor.service";
 import { useChartStore } from "@/store/chart.store";
-import { useSecurityListStore } from "@/store/security-list.store";
-import { computed, defineComponent, onMounted } from "vue";
+import { computed, defineComponent, nextTick, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import SecurityChart from "../components/SecurityChart.vue";
-import { nextTick } from "process";
+import { useSecurityListStore } from "@/store/security-list.store";
+import { LineDrawing } from "@/chart/drawings/line.drawing";
+import { generateCharts } from "@/chart/chart-generator.service";
 
 export default defineComponent({
   name: "SecurityChartView",
@@ -31,42 +30,41 @@ export default defineComponent({
       return chartStore.selectedSecurity;
     });
 
-    function readDataFile(securityNumber: string): SecurityDataFile {
-      try {
-          return readSecurityDataFile(securityNumber);
-      } catch (err) {
-        return {
-          created: "",
-          securityNumber,
-          data: [],
-        }
-      }
-    }
-
     onMounted(async () => {
       const chartStore = useChartStore();
       chartStore.setSelectedSecurity(undefined);
 
       const securityNumber = useRoute().params.securityNumber as string;
-      const fileData = readDataFile(useRoute().params.securityNumber as string);
+      assureSecurityFolderExists(securityNumber);
 
-      const { modified, data: newData } = await supplementSecurityDataFile(fileData, securityNumber);
-      newData.sort((a, b): number => a.tradeDate - b.tradeDate);
+      const quotesDataFile = readQuotesDataFile(useRoute().params.securityNumber as string);
+
+      const { modified, quotes: newData } = await supplementSecurityDataFile(quotesDataFile, securityNumber);
+      newData.sort((a, b): number => a.tradeDateMillis - b.tradeDateMillis);
       if (modified) {
-          saveSecurityDataFile(securityNumber, newData);
+        saveQuotesDataFile(securityNumber, newData);
       }
 
-      const securityListStore = useSecurityListStore()
+      const securityListStore = useSecurityListStore();
       const security = securityListStore.list.find((it) => it.number === securityNumber);
       chartStore.setSelectedSecurity(security);
-      chartStore.setSecurityData(newData);
+
+      const drawingDataFile = readDrawingDataFile(securityNumber);
+      const drawings = drawingDataFile.drawings.map((it) => {
+        if (it.type === 'line') {
+          return new LineDrawing(it.data);
+        }
+        throw Error(`Unknown type of drawing: ${it.type}`);
+      })
+
+      chartStore.setChartData(newData, drawings);
 
       nextTick(() => {
         generateCharts(newData);
-      })
+      });
     });
 
-    return { selectedSecurity }
+    return { selectedSecurity };
   },
 });
 </script>

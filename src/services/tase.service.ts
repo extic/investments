@@ -1,8 +1,8 @@
 import { ipcRenderer } from "electron";
-import { SecurityData } from "@/store/chart.store";
 import { SecurityListItem } from "@/store/security-list.store";
 import { SecurityInfo } from "@/store/portfolio.store";
 import { DateTime } from "luxon";
+import { Quote } from "@/store/chart.store";
 
 export const getSecurityList = async (): Promise<SecurityListItem[]> => {
   const body = {
@@ -21,7 +21,7 @@ export const getSecurityList = async (): Promise<SecurityListItem[]> => {
   });
 };
 
-export const getSecurityHistory = async (securityNumber: string, pageNumber: number): Promise<SecurityData[]> => {
+export const getSecurityHistory = async (securityNumber: string, pageNumber: number): Promise<Quote[]> => {
   const body = {
     pType: 7,
     TotalRec: 1,
@@ -37,10 +37,10 @@ export const getSecurityHistory = async (securityNumber: string, pageNumber: num
       highRate: it.HighRate,
       lowRate: it.LowRate,
       openRate: it.OpenRate,
-      tradeDate: DateTime.fromFormat(it.TradeDate, 'dd/MM/yyyy').toUTC().toMillis(),
-      tradeDateStr: it.TradeDate,
+      tradeDate: it.TradeDate,
+      tradeDateMillis: DateTime.fromFormat(it.TradeDate, 'dd/MM/yyyy').toUTC().toMillis(),
       volume: it.OverallTurnOverUnits,
-    } as SecurityData;
+    } as Quote;
   });
 };
 

@@ -38,7 +38,7 @@ export default defineComponent({
     watch(
       () => [store.fromPos, store.toPos],
       () => {
-        const renderContext = createRenderContext(store.fromPos, store.toPos, store.chartWidth, store.securityData);
+        const renderContext = createRenderContext(store.fromPos, store.toPos, store.chartWidth, store.quotes);
         store.setRenderContext(renderContext);
     });
 

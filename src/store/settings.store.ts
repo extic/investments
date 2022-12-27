@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 
-export const useSetttingsStore = defineStore("settings", {
+export const useSettingsStore = defineStore("settings", {
   state: () => ({
     _databaseFolder: 'C:/Users/User/.investments',
   }),

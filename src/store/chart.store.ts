@@ -1,16 +1,17 @@
+import { DomainAxis } from "@/chart/axis";
 import { Chart } from "@/chart/chart";
-import chartRecalculator from "@/chart/chart-calculator.service";
+import { Drawing } from "@/chart/drawing";
 import { SelectedSecurity } from "@/types/types";
 import { defineStore } from "pinia";
 
-export type SecurityData = {
+export type Quote = {
   closeRate: number;
   dealsNo: number;
   highRate: number;
   lowRate: number;
   openRate: number;
-  tradeDate: number;
-  tradeDateStr: string;
+  tradeDate: string;
+  tradeDateMillis: number;
   volume: number;
 }
 
@@ -19,7 +20,7 @@ export type QuotePosition = {
   pos: number;
   index: number | undefined;
   major: boolean;
-  data: SecurityData | undefined;
+  quote: Quote | undefined;
 }
 
 export type RenderContext = {
@@ -28,35 +29,26 @@ export type RenderContext = {
   width: number;
   fromIndex: number;
   toIndex: number;
+  domainAxis: DomainAxis;
 }
 
 export const useChartStore = defineStore("chart", {
   state: () => ({
-    _scrollPosition: 0,
-    _scrollLength: 1,
-    _startIndex: 0,
-    _chartWidth: 0,
-    _endIndex: 0,
-    _chartPaintTrigger: 0,
-
     _selectedSecurity: undefined as SelectedSecurity,
-    _securityData: [] as SecurityData[],
+    _quotes: [] as Quote[],
+    _drawings: [] as Drawing[],
     _charts: [] as Chart[],
     _fromPos: 0,
     _toPos: 0,
+    _chartWidth: 0,
     _quoteWidth: 0,
     _renderContext: {} as RenderContext,
   }),
 
   getters: {
-    scrollPosition: (state): number => state._scrollPosition,
-    scrollLength: (state): number => state._scrollLength,
-    startIndex: (state): number => state._startIndex,
-    endIndex: (state): number => state._endIndex,
-    chartPaintTrigger: (state): number => state._chartPaintTrigger,
-
     selectedSecurity: (state): SelectedSecurity => state._selectedSecurity,
-    securityData: (state): SecurityData[] => state._securityData,
+    quotes: (state): Quote[] => state._quotes,
+    drawings: (state): Drawing[] => state._drawings,
     charts: (state): Chart[] => state._charts,
     fromPos: (state): number => state._fromPos,
     toPos: (state): number => state._toPos,
@@ -70,21 +62,9 @@ export const useChartStore = defineStore("chart", {
       this._selectedSecurity = selectedSecurity;
     },
 
-    setSecurityData(data: SecurityData[]): void {
-      this._securityData = data;
-    },
-
-    setScroll(position: number, length: number): void {
-      this._scrollPosition = position;
-      this._scrollLength = length;
-      chartRecalculator.recalc();
-    },
-
-    setIndexes(startIndex: number, endIndex: number, quoteWidth: number): void {
-      this._startIndex = startIndex;
-      this._endIndex = endIndex;
-      this._quoteWidth = quoteWidth;
-      this._chartPaintTrigger++;
+    setChartData(quotes: Quote[], drawings: Drawing[]): void {
+      this._quotes = quotes;
+      this._drawings = drawings;
     },
 
     initCharts(fromPos: number, toPos: number, ...charts: Chart[]): void {

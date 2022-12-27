@@ -3,7 +3,7 @@
     <div v-if="selectedSecurity">
       <nav class="regular">
         <button class="back-button" @click="backPressed">Back</button>
-        <h1>{{ selectedSecurity.name }}</h1>
+        <h1>{{ selectedSecurity.name }} ({{ selectedSecurity.number }})</h1>
       </nav>
     </div>
     <div v-else>

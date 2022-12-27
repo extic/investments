@@ -33,8 +33,8 @@ export default defineComponent({
     const wheelMoved = (event: WheelEvent) => {
       const delta = (store.toPos - store.fromPos) / 30;
       const direction = event.deltaY > 0 ? delta : -delta;
-      const newFromPos = store.fromPos + (event.shiftKey ? -direction : -direction);
-      const newToPos = store.toPos + (event.shiftKey ? -direction : direction);;
+      const newFromPos = store.fromPos + (event.shiftKey ? direction : -direction);
+      const newToPos = store.toPos + (event.shiftKey ? direction : direction);;
       store.setPositions(newFromPos, newToPos);
     }
 
@@ -42,7 +42,6 @@ export default defineComponent({
       canvas.value!!.width = pane.value!!.offsetWidth;
       canvas.value!!.height = pane.value!!.offsetHeight;
       const ctx = canvas.value!!.getContext("2d")!!;
-      ctx.translate(0.5, 0.5);
 
       props.chart!!.render(ctx);
     });

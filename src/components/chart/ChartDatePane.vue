@@ -54,8 +54,8 @@ export default defineComponent({
           ctx.moveTo(quotePosition.pos, 0);
           ctx.lineTo(quotePosition.pos, 5);
 
-          if (quotePosition.data) {
-            const text = quotePosition.data.tradeDateStr
+          if (quotePosition.quote) {
+            const text = quotePosition.quote.tradeDate
             const metrics = ctx.measureText(text);
             ctx.fillText(text, quotePosition.pos - metrics.width / 2, 17);
           }
