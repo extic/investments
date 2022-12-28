@@ -1,33 +1,34 @@
-import { RenderContext } from "@/store/chart.store";
+import { DomainContext } from "@/store/chart.store";
 import { maxBy, minBy } from "lodash";
-import { RangeAxis } from "../axis";
 import { CandleStickData } from "../data-providers/candlestick.data-provider";
-import { Renderer } from "../renderer";
+import { MinMax, RenderContext, Renderer } from "../renderer";
 
 export class CandleStickRenderer extends Renderer {
   constructor(private readonly data: CandleStickData[]) {
     super();
   }
 
-  initAxis(context: RenderContext, canvasHeight: number): void {
+  calcMinMax(context: DomainContext): MinMax {
     const slicedData = this.data.slice(context.fromIndex, context.toIndex);
 
     const minValue = minBy(slicedData, (it) => it.low)!!.low;
     const maxValue = maxBy(slicedData, (it) => it.high)!!.high;
-    this.rangeAxis = new RangeAxis(minValue, maxValue, canvasHeight);
+
+    return { min: minValue, max: maxValue };
   }
 
-  render(ctx: CanvasRenderingContext2D, context: RenderContext): void {
+  render(context: RenderContext): void {
     for (let i=0; i < context.quotePositions.length; i++) {
       const dataIndex = context.quotePositions[i].index;
       if (dataIndex !== undefined) {
         const data = this.data[dataIndex];
         const pos = context.quotePositions[i].pos;
-        const low = this.rangeAxis!!.toCanvas(data.low);
-        const open = this.rangeAxis!!.toCanvas(data.open);
-        const close = this.rangeAxis!!.toCanvas(data.close);
-        const high = this.rangeAxis!!.toCanvas(data.high);
+        const low = context.rangeAxis.toCanvas(data.low);
+        const open = context.rangeAxis.toCanvas(data.open);
+        const close = context.rangeAxis.toCanvas(data.close);
+        const high = context.rangeAxis.toCanvas(data.high);
 
+        const ctx = context.canvasCtx;
         ctx.strokeStyle = "black"
         ctx.beginPath();
         ctx.moveTo(pos, low)

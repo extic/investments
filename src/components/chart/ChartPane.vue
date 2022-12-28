@@ -3,7 +3,7 @@
     <!-- <div class="chart-title">
       <div>הפועלים</div>
     </div> -->
-    <canvas ref="canvas" @wheel="wheelMoved"></canvas>
+    <canvas ref="canvas" @wheel="wheelMoved" @mousemove="mouseMoved"></canvas>
   </div>
 </template>
 
@@ -11,7 +11,6 @@
 import { defineComponent, onMounted, PropType, ref, watch } from "vue";
 import { useChartStore } from "@/store/chart.store";
 import { Chart } from "@/chart/chart";
-import { createRenderContext } from "@/chart/render-context-calculator";
 
 export default defineComponent({
   name: "ChartPane",
@@ -19,7 +18,7 @@ export default defineComponent({
   props: {
     chart: {
       type: Object as PropType<Chart>,
-    }
+    },
   },
 
   setup(props) {
@@ -34,26 +33,38 @@ export default defineComponent({
       const delta = (store.toPos - store.fromPos) / 30;
       const direction = event.deltaY > 0 ? delta : -delta;
       const newFromPos = store.fromPos + (event.shiftKey ? direction : -direction);
-      const newToPos = store.toPos + (event.shiftKey ? direction : direction);;
+      const newToPos = store.toPos + (event.shiftKey ? direction : direction);
       store.setPositions(newFromPos, newToPos);
-    }
+    };
+
+    const mouseMoved = (event: MouseEvent) => {
+      const ctx = canvas.value!!.getContext("2d")!!;
+      chart.mouseMoved(event, ctx);
+      render();
+    };
 
     onMounted(() => {
       canvas.value!!.width = pane.value!!.offsetWidth;
       canvas.value!!.height = pane.value!!.offsetHeight;
-      const ctx = canvas.value!!.getContext("2d")!!;
 
-      props.chart!!.render(ctx);
+      render();
     });
+
+    const render = () => {
+      // console.time("Render");
+      const ctx = canvas.value!!.getContext("2d")!!;
+      props.chart!!.render(ctx);
+      // console.timeEnd("Render");
+    };
 
     watch(
-      () => [store.renderContext],
+      () => [store.domainContext],
       () => {
-        const ctx = canvas.value!!.getContext("2d")!!;
-        props.chart!!.render(ctx);
-    });
+        render();
+      }
+    );
 
-    return { paneWidth, paneHeight, pane, canvas, chart, wheelMoved };
+    return { paneWidth, paneHeight, pane, canvas, chart, wheelMoved, mouseMoved };
   },
 });
 </script>

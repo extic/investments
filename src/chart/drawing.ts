@@ -1,9 +1,10 @@
-import { RenderContext } from "@/store/chart.store";
-import { Axis } from "./axis";
+import { RenderContext } from "./renderer";
 
 export interface Drawing {
   readonly chartName: string;
+  readonly selected: boolean;
 
-  render(ctx: CanvasRenderingContext2D, context: RenderContext, canvasHeight: number, rangeAxis: Axis): void;
+  render(context: RenderContext): void;
+  handleMouseOver(cursorX: number, cursorY: number): void;
   isHover(): boolean;
 }

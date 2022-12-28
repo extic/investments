@@ -30,24 +30,18 @@ export function generateCharts(data: Quote[]) {
     new CandleStickRenderer(candleStickData),
     // new LineRenderer(lineData),
   ];
-  const mainChart = new BasicChart("main", mainRenderers, true, 0.7);
+  const mainChart = new BasicChart("main", mainRenderers, 0.7);
 
   const volumeData = new VolumeDataProvider().provide(securityData);
   const volumeRenderers: Renderer[] = [
     new StandingBarsRenderer(volumeData)
   ];
-  const volumeChart = new BasicChart("volume", volumeRenderers, false, 0.3);
+  const volumeChart = new BasicChart("volume", volumeRenderers, 0.3);
 
   const { fromPos, toPos } = calcDomainPositions(securityData);
 
   return store.initCharts(fromPos, toPos, mainChart, volumeChart);
 }
-
-export type MinMax = {
-  min: number;
-  max: number;
-};
-
 
 function calcDomainPositions(data: Quote[]): { fromPos: number, toPos: number } {
   const toPos = data.length - 1;

@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { Chart } from "@/chart/chart";
-import { createRenderContext } from "@/chart/render-context-calculator";
+import { createDomainContext } from "@/chart/domain-context-calculator";
 import { computed, defineComponent, onMounted, ref, watch } from "vue";
 import { useChartStore } from "../store/chart.store";
 import ChartDatePane from "./chart/ChartDatePane.vue";
@@ -38,13 +38,13 @@ export default defineComponent({
     watch(
       () => [store.fromPos, store.toPos],
       () => {
-        const renderContext = createRenderContext(store.fromPos, store.toPos, store.chartWidth, store.quotes);
-        store.setRenderContext(renderContext);
+        const domainContext = createDomainContext(store.fromPos, store.toPos, store.canvasWidth, store.quotes);
+        store.setDomainContext(domainContext);
     });
 
     onMounted(() => {
-      const chartWidth = chartPanelContainer.value!!.offsetWidth;
-      store.setChartWidth(chartWidth);
+      const canvasWidth = chartPanelContainer.value!!.offsetWidth;
+      store.setCanvasWidth(canvasWidth);
     })
 
     return { chartPanelContainer, chartContainer, charts, calcHeight };

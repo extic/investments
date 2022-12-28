@@ -8,3 +8,8 @@ export type Security = {
 }
 
 export type SelectedSecurity = undefined | SecurityListItem | PortfolioItem | WatchlistItem
+
+export type Point = {
+  x: number;
+  y: number;
+}

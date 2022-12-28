@@ -23,10 +23,10 @@ export type QuotePosition = {
   quote: Quote | undefined;
 }
 
-export type RenderContext = {
+export type DomainContext = {
   quotePositions: QuotePosition[],
   quoteWidth: number;
-  width: number;
+  canvasWidth: number;
   fromIndex: number;
   toIndex: number;
   domainAxis: DomainAxis;
@@ -40,9 +40,9 @@ export const useChartStore = defineStore("chart", {
     _charts: [] as Chart[],
     _fromPos: 0,
     _toPos: 0,
-    _chartWidth: 0,
+    _canvasWidth: 0,
     _quoteWidth: 0,
-    _renderContext: {} as RenderContext,
+    _domainContext: {} as DomainContext,
   }),
 
   getters: {
@@ -52,9 +52,9 @@ export const useChartStore = defineStore("chart", {
     charts: (state): Chart[] => state._charts,
     fromPos: (state): number => state._fromPos,
     toPos: (state): number => state._toPos,
-    chartWidth: (state): number => state._chartWidth,
+    canvasWidth: (state): number => state._canvasWidth,
     quoteWidth: (state): number => state._quoteWidth,
-    renderContext: (state): RenderContext => state._renderContext,
+    domainContext: (state): DomainContext => state._domainContext,
   },
 
   actions: {
@@ -78,12 +78,12 @@ export const useChartStore = defineStore("chart", {
       this._toPos = toPos;
     },
 
-    setChartWidth(width: number): void {
-      this._chartWidth = width;
+    setCanvasWidth(width: number): void {
+      this._canvasWidth = width;
     },
 
-    setRenderContext(context: RenderContext): void {
-      this._renderContext = context;
+    setDomainContext(context: DomainContext): void {
+      this._domainContext = context;
     },
   },
 });

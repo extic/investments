@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { RenderContext, useChartStore } from "../../store/chart.store";
+import { DomainContext, useChartStore } from "../../store/chart.store";
 import { defineComponent, nextTick, onMounted, ref, watch } from "vue";
 import { DATE_PANE_HEIGHT } from "./chart.constants";
 import { lastIndexOf } from "lodash";
@@ -26,14 +26,14 @@ export default defineComponent({
       ctx.translate(0.5, 0.5);
 
       watch(
-        () => [store.renderContext],
+        () => [store.domainContext],
         () => {
-          repaint(ctx, store.renderContext);
+          repaint(ctx, store.domainContext);
         }
       );
     });
 
-    const repaint = (ctx: CanvasRenderingContext2D, context: RenderContext) => {
+    const repaint = (ctx: CanvasRenderingContext2D, context: DomainContext) => {
       ctx.clearRect(0, 0, canvas.value!!.width, canvas.value!!.height);
 
       ctx.strokeStyle = "#cccccc";
@@ -47,7 +47,7 @@ export default defineComponent({
       ctx.font = "11px helvetica";
       ctx.beginPath();
 
-      const quotePositions = store.renderContext.quotePositions;
+      const quotePositions = store.domainContext.quotePositions;
       for (let i=0; i < quotePositions.length; i++) {
         const quotePosition = quotePositions[i];
         if (quotePosition.major) {

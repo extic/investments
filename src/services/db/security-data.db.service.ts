@@ -72,7 +72,6 @@ export const assureSecurityFolderExists = (securityNumber: string): void => {
 
   const store = useSecurityListStore();
   const security = store.list.find((it) => it.number === securityNumber)!!;
-  lastUpdated: DateTime.now().toFormat('dd/MM/yyyy HH:mm:ss'),
 
   saveMetaDataFile(securityNumber, security.name, 'never');
   saveQuotesDataFile(securityNumber, [], 'never');

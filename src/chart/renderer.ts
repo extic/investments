@@ -1,9 +1,18 @@
-import { RenderContext } from "@/store/chart.store";
-import { Axis } from "./axis";
+import { DomainContext } from "@/store/chart.store";
+import { RangeAxis } from "./axis";
+
+export type MinMax = {
+  min: number;
+  max: number;
+};
+
+export type RenderContext = DomainContext & {
+  canvasCtx: CanvasRenderingContext2D
+  canvasHeight: number;
+  rangeAxis: RangeAxis;
+}
 
 export abstract class Renderer {
-  public rangeAxis: Axis | undefined
-
-  abstract initAxis(context: RenderContext, canvasHeight: number): void;
-  abstract render(ctx: CanvasRenderingContext2D, context: RenderContext, canvasHeight: number): void;
+  abstract calcMinMax(context: DomainContext): MinMax;
+  abstract render(context: RenderContext): void;
 }
