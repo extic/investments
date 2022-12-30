@@ -86,11 +86,11 @@ export default defineComponent({
     });
 
     const isPressable = computed(() => {
-      return chart.isPressable();
+      return chart.isPressable() && !chart.isDragging();
     })
 
     watch(
-      () => [store.domainContext, store.selectedDrawing, store.selectedHandle, store.forceRender],
+      () => [store.domainContext, store.hoveredDrawing, store.hoveredHandle, store.forceRender],
       () => {
         render();
       }

@@ -8,6 +8,8 @@ import { storeToRefs } from "pinia";
 import { MouseEventType } from "./mouse-state/mouse-state";
 import { MouseStateMachine } from "./mouse-state/mouse-state-machine";
 import { DragChartMouseState } from "./mouse-state/drag-chart.mouse-state";
+import { DragHandleMouseState } from "./mouse-state/drag-handle.mouse-state";
+import { DragDrawingMouseState } from "./mouse-state/drag-drawing.mouse-state";
 
 export interface Chart {
   heightRatio: number;
@@ -84,59 +86,15 @@ export class BasicChart implements Chart {
   }
 
   isDragging(): boolean {
-    return this.stateMachine.currentStateName() === DragChartMouseState.stateName;
+    return this.stateMachine.currentStateName() === DragChartMouseState.stateName ||
+      this.stateMachine.currentStateName() === DragDrawingMouseState.stateName ||
+      this.stateMachine.currentStateName() === DragHandleMouseState.stateName;
   }
 
   isPressable(): boolean {
     const store = useChartStore();
-    return !store.selectedHandle;
+    return store.hoveredHandle !== undefined;
   }
-
-  // mouseMoved(event: MouseEvent): void {
-  //   this.cursor = { x: event.offsetX, y: event.offsetY };
-
-  //   const cursorX = this.renderContext.domainAxis.toChart(event.offsetX);
-  //   const cursorY = this.renderContext.rangeAxis.toChart(this.renderContext.canvasHeight - event.offsetY);
-
-  //   const store = useChartStore();
-  //   store.drawings
-  //     .filter((it) => it.chartName === this.name)
-  //     .forEach((drawing, index) => {
-  //       // drawing.handleMouseOver(cursorX, cursorY);
-  //     });
-  // }
-
-  // mouseClicked(event: MouseEvent): void {
-  //   const cursorX = this.renderContext.domainAxis.toChart(event.offsetX);
-  //   const cursorY = this.renderContext.rangeAxis.toChart(this.renderContext.canvasHeight - event.offsetY);
-
-  //   const store = useChartStore();
-  //   const drawing = store.drawings
-  //     .filter((it) => it.chartName === this.name)
-  //     .find((it) => it.isHover(cursorX, cursorY))
-
-  //   store.drawings.forEach((it) => it.selected = it === drawing);
-  // }
-
-  // mouseDown(event: MouseEvent): void {
-  //   this.mouseOperation.isDragging = true;
-
-  //   const store = useChartStore();
-  //   const drawing = store.drawings
-  //     .filter((it) => it.chartName === this.name)
-  //     .find((it) => it.selected);
-  //   if (drawing) {
-  //     const cursorX = event.offsetX;
-  //     const cursorY = this.renderContext.canvasHeight - event.offsetY;
-
-  //     drawing.mouseDown(cursorX, cursorY);
-  //   }
-
-  // }
-
-  // mouseUp(event: MouseEvent): void {
-  //   this.mouseOperation.isDragging = false;
-  // }
 
   private clearCanvas(ctx: CanvasRenderingContext2D) {
     ctx.setTransform(1, 0, 0, 1, 0, 0);

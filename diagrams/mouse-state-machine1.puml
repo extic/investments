@@ -2,10 +2,6 @@
 hide empty description
 state "choice1" <<choice>>
 state "choice2" <<choice>>
-state "choice3" <<choice>>
-state "choice5" <<choice>>
-state "choice6" <<choice>>
-state "choice7" <<choice>>
 
 
 [*] --> Neutral
@@ -16,11 +12,11 @@ Neutral --> choice1: Mouse Move
 DragChart --> DragChart: Mouse Move
 DragChart --> Neutral: Mouse Up
 
-choice1 --> choice5: Drawing Mode\n and Hovering drawing?
+choice1 --> choice2: Drawing Mode\n and Hovering drawing?
 choice1 --> Neutral: Not in Drawing Mode\nor not hovering drawing
 
-choice5 --> HoverHandle: Hovering Handle?
-choice5 --> HoverDrawing: Not Hovering Handle
+choice2 --> HoverHandle: Hovering Handle?
+choice2 --> HoverDrawing: Not Hovering Handle
 
 HoverDrawing --> choice1: Mouse Move
 HoverDrawing --> DragDrawing: Mouse Down
@@ -28,26 +24,10 @@ HoverDrawing --> DragDrawing: Mouse Down
 DragDrawing --> DragDrawing: Mouse Move
 DragDrawing --> choice1: Mouse Up
 
-' SelectedDrawing --> choice3: Mouse Move
-' SelectedDrawing --> choice6: Mouse Down
-
-' choice6 --> DragDrawing: Hovering drawing?
-' choice6 --> Neutral: Not hovering drawing
-
-' choice3 --> HoverHandle: Hovering handle?
-' choice3 --> SelectedDrawing: Not hovering handle
-
-HoverHandle --> choice2: Mouse Move
+HoverHandle --> choice1: Mouse Move
 HoverHandle --> DragHandle: Mouse Down
-
-choice2 --> SelectedDrawing: Selected drawing?
-choice2 --> choice1: No selected drawing
 
 DragHandle --> DragHandle: Mouse Move
 DragHandle --> choice1: Mouse Up
-
-' SelectedHandle --> choice7: Mouse Move
-
-' choice7 --> HoverHandle: Hovering handle? ' choice7 --> SelectedDrawing: Not hovering handle
 
 @enduml

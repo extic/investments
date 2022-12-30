@@ -1,11 +1,8 @@
-import { useChartStore } from "@/store/chart.store";
 import { RenderContext } from "../renderer";
 import { DragDrawingMouseState } from "./drag-drawing.mouse-state";
-import { HoveringHandleMouseState } from "./hovering-handle.mouse-state";
 import { MouseEventType, MouseState } from "./mouse-state";
 import { MouseStateMachine } from "./mouse-state-machine";
-import { NeutralMouseState } from "./neutral.mouse-state";
-import { getHoveredDrawing, getHoveredHandle } from "./state-utils";
+import { handleChoices } from "./state-utils";
 
 export class HoveringDrawingMouseState implements MouseState {
   static readonly stateName = "HoveringDrawing";
@@ -19,20 +16,7 @@ export class HoveringDrawingMouseState implements MouseState {
   trigger(eventType: MouseEventType, event: MouseEvent, renderContext: RenderContext) {
     switch (eventType) {
       case MouseEventType.MouseMove: {
-        const drawing = getHoveredDrawing(event.offsetX, event.offsetY, renderContext);
-        const store = useChartStore();
-        store.setSelectedDrawing(drawing);
-        if (drawing !== undefined) {
-          const handle = getHoveredHandle(event.offsetX, event.offsetY, renderContext, drawing);
-          store.setSelectedHandle(handle);
-          if (handle !== undefined) {
-            this.stateMachine.transition(HoveringHandleMouseState.stateName);
-          } else {
-
-          }
-        } else {
-          this.stateMachine.transition(NeutralMouseState.stateName);
-        }
+        handleChoices(event, renderContext, this.stateMachine);
         break;
       }
 

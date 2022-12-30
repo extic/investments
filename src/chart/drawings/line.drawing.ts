@@ -17,7 +17,7 @@ export class LineDrawing implements Drawing {
     this.renderContext = renderContext;
 
     const store = useChartStore();
-    const isSelected = (store.selectedDrawing == this as unknown as Drawing);
+    const isSelected = (store.hoveredDrawing == this as unknown as Drawing);
 
     this.canvasHandles = this.data.handles.map((it) => {
       return {
@@ -35,7 +35,7 @@ export class LineDrawing implements Drawing {
     ctx.stroke();
 
     if (isSelected) {
-      ctx.fillStyle = store.selectedHandle === 0 ? 'blue' : 'white';
+      ctx.fillStyle = store.hoveredHandle === 0 ? 'blue' : 'white';
       ctx.lineWidth = 1;
       ctx.strokeStyle = 'black';
       ctx.beginPath();
@@ -43,7 +43,7 @@ export class LineDrawing implements Drawing {
       ctx.fill();
       ctx.stroke();
 
-      ctx.fillStyle = store.selectedHandle === 1 ? 'blue' : 'white';
+      ctx.fillStyle = store.hoveredHandle === 1 ? 'blue' : 'white';
       ctx.beginPath();
       ctx.arc(this.canvasHandles[1].x, renderContext.canvasHeight - this.canvasHandles[1].y, 5, 0, 2 * Math.PI, false);
       ctx.fill();

@@ -43,8 +43,8 @@ export const useChartStore = defineStore("chart", {
     _canvasWidth: 0,
     _quoteWidth: 0,
     _domainContext: {} as DomainContext,
-    _selectedDrawing: undefined as Drawing | undefined,
-    _selectedHandle: undefined as number | undefined,
+    _hoveredDrawing: undefined as Drawing | undefined,
+    _hoveredHandle: undefined as number | undefined,
     _forceRender: 0,
   }),
 
@@ -58,8 +58,8 @@ export const useChartStore = defineStore("chart", {
     canvasWidth: (state): number => state._canvasWidth,
     quoteWidth: (state): number => state._quoteWidth,
     domainContext: (state): DomainContext => state._domainContext,
-    selectedDrawing: (state): Drawing | undefined => state._selectedDrawing,
-    selectedHandle: (state): number | undefined => state._selectedHandle,
+    hoveredDrawing: (state): Drawing | undefined => state._hoveredDrawing,
+    hoveredHandle: (state): number | undefined => state._hoveredHandle,
     forceRender: (state): number => state._forceRender,
   },
 
@@ -92,12 +92,12 @@ export const useChartStore = defineStore("chart", {
       this._domainContext = context;
     },
 
-    setSelectedDrawing(drawing: Drawing | undefined): void {
-      this._selectedDrawing = drawing;
+    setHoveredDrawing(drawing: Drawing | undefined): void {
+      this._hoveredDrawing = drawing;
     },
 
-    setSelectedHandle(handle: number | undefined): void {
-      this._selectedHandle = handle;
+    setHoveredHandle(handle: number | undefined): void {
+      this._hoveredHandle = handle;
     },
 
     setForceRender(): void {

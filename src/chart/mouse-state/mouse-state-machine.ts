@@ -1,13 +1,11 @@
 import { RenderContext } from "../renderer";
 import { DragChartMouseState } from "./drag-chart.mouse-state";
-import { NeutralMouseState } from "./neutral.mouse-state";
-import { MouseState, MouseEventType } from "./mouse-state";
-import { HoveringDrawingMouseState } from "./hovering-drawing.mouse-state";
-import { HoveringHandleMouseState } from "./hovering-handle.mouse-state";
-import { SelectedDrawingMouseState } from "./selected-drawing.mouse-state";
 import { DragDrawingMouseState } from "./drag-drawing.mouse-state";
 import { DragHandleMouseState } from "./drag-handle.mouse-state";
-import { SelectedHandleMouseState } from "./selected-handle.mouse-state";
+import { HoveringDrawingMouseState } from "./hovering-drawing.mouse-state";
+import { HoveringHandleMouseState } from "./hovering-handle.mouse-state";
+import { MouseEventType, MouseState } from "./mouse-state";
+import { NeutralMouseState } from "./neutral.mouse-state";
 
 
 export class MouseStateMachine {
@@ -22,8 +20,6 @@ export class MouseStateMachine {
     this.addState(new HoveringHandleMouseState(this));
     this.addState(new DragDrawingMouseState(this));
     this.addState(new DragHandleMouseState(this));
-    this.addState(new SelectedDrawingMouseState(this));
-    this.addState(new SelectedHandleMouseState(this));
 
     this.currState = this.states.get(NeutralMouseState.stateName)!!;
   }
@@ -33,7 +29,7 @@ export class MouseStateMachine {
   }
 
   trigger(eventType: MouseEventType, event: MouseEvent, renderContext: RenderContext) {
-    console.log(`${this.currState.getStateName()}: triggering ${eventType}`)
+    console.log(`${this.currState.getStateName()}: triggering ${MouseEventType[eventType]}`)
     this.currState.trigger(eventType, event, renderContext);
   }
 
