@@ -2,9 +2,10 @@ import { RenderContext } from "./renderer";
 
 export interface Drawing {
   readonly chartName: string;
-  readonly selected: boolean;
 
   render(context: RenderContext): void;
-  handleMouseOver(cursorX: number, cursorY: number): void;
-  isHover(): boolean;
+  isHover(cursorX: number, cursorY: number): boolean;
+  getHoveredHandle(cursorX: number, cursorY: number): number | undefined;
+  move(deltaX: number, deltaY: number): void;
+  moveHandle(deltaX: number, deltaY: number, handle: number): void;
 }

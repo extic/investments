@@ -10,6 +10,7 @@ export type RenderContext = DomainContext & {
   canvasCtx: CanvasRenderingContext2D
   canvasHeight: number;
   rangeAxis: RangeAxis;
+  chartName: string;
 }
 
 export abstract class Renderer {

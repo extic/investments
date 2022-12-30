@@ -23,10 +23,10 @@ export class CandleStickRenderer extends Renderer {
       if (dataIndex !== undefined) {
         const data = this.data[dataIndex];
         const pos = context.quotePositions[i].pos;
-        const low = context.rangeAxis.toCanvas(data.low);
-        const open = context.rangeAxis.toCanvas(data.open);
-        const close = context.rangeAxis.toCanvas(data.close);
-        const high = context.rangeAxis.toCanvas(data.high);
+        const low = context.canvasHeight - context.rangeAxis.toCanvas(data.low);
+        const open = context.canvasHeight - context.rangeAxis.toCanvas(data.open);
+        const close = context.canvasHeight - context.rangeAxis.toCanvas(data.close);
+        const high = context.canvasHeight - context.rangeAxis.toCanvas(data.high);
 
         const ctx = context.canvasCtx;
         ctx.strokeStyle = "black"

@@ -21,8 +21,9 @@ export class StandingBarsRenderer extends Renderer {
       if (dataIndex !== undefined) {
         const pos = context.quotePositions[i].pos;
         const canvasPosY = context.rangeAxis.toCanvas(this.data[dataIndex]);
+        // console.log(canvasPosY, canvasHeight);
 
-        ctx.fillRect(pos - context.quoteWidth / 2 + 1, canvasHeight, context.quoteWidth - 2, canvasPosY - canvasHeight);
+        ctx.fillRect(pos - context.quoteWidth / 2 + 1, canvasHeight, context.quoteWidth - 2, -canvasPosY);
       }
     }
   }
