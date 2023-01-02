@@ -20,8 +20,7 @@ const getHoveredHandle = (cursorX: number, cursorY: number, renderContext: Rende
 
 export const handleChoices = (event: MouseEvent, renderContext: RenderContext, stateMachine: MouseStateMachine) => {
   const store = useChartStore();
-  const isInDrawingMode = true;
-  if (isInDrawingMode) {
+  if (store.drawMode) {
     const drawing = getHoveredDrawing(event.offsetX, event.offsetY, renderContext);
     store.setHoveredDrawing(drawing);
     if (drawing !== undefined) {

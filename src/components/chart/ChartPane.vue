@@ -31,40 +31,25 @@ export default defineComponent({
     const pane = ref<HTMLDivElement>();
     const paneWidth = ref(0);
     const paneHeight = ref(0);
+
     const canvas = ref<HTMLCanvasElement>();
     const store = useChartStore();
     const chart = props.chart!!;
 
-
     const wheelMoved = (event: WheelEvent) => {
       chart.wheelMoved(event);
-      // const delta = (store.toPos - store.fromPos) / 30;
-      // const direction = event.deltaY > 0 ? delta : -delta;
-      // const newFromPos = store.fromPos + (event.shiftKey ? direction : -direction);
-      // const newToPos = store.toPos + (event.shiftKey ? direction : direction);
-      // store.setPositions(newFromPos, newToPos);
     };
 
     const mouseMoved = (event: MouseEvent) => {
       chart.mouseMoved(event);
-      // stateMachine.trigger(MouseEventType.MouseMove, event, this.render);
-      // const ctx = canvas.value!!.getContext("2d")!!;
-      // chart.mouseMoved(event, ctx);
-      // render();
     };
 
     const mouseDown = (event: MouseEvent) => {
       chart.mouseDown(event);
-      // stateMachine.trigger(MouseEventType.MouseDown, event);
-      // chart.mouseDown(event);
-      // render();
     };
 
     const mouseUp = (event: MouseEvent) => {
       chart.mouseUp(event);
-      // stateMachine.trigger(MouseEventType.MouseUp, event);
-      // chart.mouseUp(event);
-      // render();
     };
 
     onMounted(() => {

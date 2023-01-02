@@ -29,12 +29,12 @@ export class MouseStateMachine {
   }
 
   trigger(eventType: MouseEventType, event: MouseEvent, renderContext: RenderContext) {
-    console.log(`${this.currState.getStateName()}: triggering ${MouseEventType[eventType]}`)
+    // console.log(`${this.currState.getStateName()}: triggering ${MouseEventType[eventType]}`)
     this.currState.trigger(eventType, event, renderContext);
   }
 
   transition(toStateName: string) {
-    console.log(`${this.currState.getStateName()}: transitioning to ${toStateName}`)
+    // console.log(`${this.currState.getStateName()}: transitioning to ${toStateName}`)
     this.currState = this.states.get(toStateName)!!;
   }
 

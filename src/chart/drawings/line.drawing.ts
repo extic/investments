@@ -8,14 +8,14 @@ export type LineDrawingData = {
 }
 
 export class LineDrawing implements Drawing {
-  private renderContext: RenderContext = {} as RenderContext;
+  readonly type: string;
   private canvasHandles: Point[] = [];
 
-  constructor(public readonly chartName: string, private readonly data: LineDrawingData) {}
+  constructor(public readonly chartName: string, readonly data: LineDrawingData) {
+    this.type = "line";
+  }
 
   render(renderContext: RenderContext): void {
-    this.renderContext = renderContext;
-
     const store = useChartStore();
     const isSelected = (store.hoveredDrawing == this as unknown as Drawing);
 
@@ -69,11 +69,6 @@ export class LineDrawing implements Drawing {
   }
 
   move(deltaX: number, deltaY: number): void {
-    // const chartDeltaX = this.renderContext.domainAxis.toChart(deltaX);
-    // const chartDeltaY = this.renderContext.rangeAxis.toChart(deltaY);
-
-    // console.log(this.data.handles, deltaX, deltaY)
-
     this.data.handles.forEach((it) => {
       it.x += deltaX;
       it.y += deltaY;
@@ -81,9 +76,6 @@ export class LineDrawing implements Drawing {
   }
 
   moveHandle(deltaX: number, deltaY: number, handle: number): void {
-    // const chartDeltaX = this.renderContext.domainAxis.toChart(deltaX);
-    // const chartDeltaY = this.renderContext.rangeAxis.toChart(deltaY);
-
     this.data.handles[handle].x += deltaX;
     this.data.handles[handle].y += deltaY;
   }

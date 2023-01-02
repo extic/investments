@@ -1,19 +1,16 @@
 import { DomainContext, useChartStore } from "@/store/chart.store";
 import { maxBy, minBy } from "lodash";
-import { RenderContext, Renderer } from "./renderer";
 import { Point } from "../types/types";
-import { Drawing } from "./drawing";
 import { RangeAxis } from "./axis";
-import { storeToRefs } from "pinia";
+import { DragChartMouseState } from "./mouse-state/drag-chart.mouse-state";
+import { DragDrawingMouseState } from "./mouse-state/drag-drawing.mouse-state";
+import { DragHandleMouseState } from "./mouse-state/drag-handle.mouse-state";
 import { MouseEventType } from "./mouse-state/mouse-state";
 import { MouseStateMachine } from "./mouse-state/mouse-state-machine";
-import { DragChartMouseState } from "./mouse-state/drag-chart.mouse-state";
-import { DragHandleMouseState } from "./mouse-state/drag-handle.mouse-state";
-import { DragDrawingMouseState } from "./mouse-state/drag-drawing.mouse-state";
+import { RenderContext, Renderer } from "./renderer";
 
 export interface Chart {
   heightRatio: number;
-  // mouseOperation: MouseOperation;
 
   render(ctx: CanvasRenderingContext2D): void;
   wheelMoved(event: WheelEvent): void;
@@ -47,8 +44,6 @@ export class BasicChart implements Chart {
         drawing.render(this.renderContext);
       });
 
-    // console.log("cursor", this.cursor.y, this.renderers[0].rangeAxis!!.toCanvas(this.cursor.y));
-
     ctx.lineWidth = 1;
     ctx.strokeStyle = "purple";
     ctx.setLineDash([5, 5]);
@@ -68,21 +63,14 @@ export class BasicChart implements Chart {
 
   mouseMoved(event: MouseEvent) {
     this.stateMachine.trigger(MouseEventType.MouseMove, event, this.renderContext);
-    // const ctx = canvas.value!!.getContext("2d")!!;
-    // chart.mouseMoved(event, ctx);
-    // render();
   }
 
   mouseDown(event: MouseEvent) {
     this.stateMachine.trigger(MouseEventType.MouseDown, event, this.renderContext);
-    // chart.mouseDown(event);
-    // render();
   }
 
   mouseUp(event: MouseEvent) {
     this.stateMachine.trigger(MouseEventType.MouseUp, event, this.renderContext);
-    // chart.mouseUp(event);
-    // render();
   }
 
   isDragging(): boolean {

@@ -1,12 +1,12 @@
 <template>
   <div class="header-bar">
-    <div v-if="selectedSecurity">
+    <template v-if="selectedSecurity">
       <nav class="regular">
         <button class="back-button" @click="backPressed">Back</button>
         <h1>{{ selectedSecurity.name }} ({{ selectedSecurity.number }})</h1>
       </nav>
-    </div>
-    <div v-else>
+    </template>
+    <template v-else>
       <nav class="tabs">
         <router-link to="/security-list">
           <div class="tab">Stock List</div>
@@ -19,7 +19,7 @@
         </router-link>
       </nav>
       <div class="under-bar"></div>
-    </div>
+    </template>
   </div>
 </template>
 

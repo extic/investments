@@ -46,6 +46,7 @@ export const useChartStore = defineStore("chart", {
     _hoveredDrawing: undefined as Drawing | undefined,
     _hoveredHandle: undefined as number | undefined,
     _forceRender: 0,
+    _drawMode: false,
   }),
 
   getters: {
@@ -61,6 +62,7 @@ export const useChartStore = defineStore("chart", {
     hoveredDrawing: (state): Drawing | undefined => state._hoveredDrawing,
     hoveredHandle: (state): number | undefined => state._hoveredHandle,
     forceRender: (state): number => state._forceRender,
+    drawMode: (state): boolean => state._drawMode,
   },
 
   actions: {
@@ -71,6 +73,18 @@ export const useChartStore = defineStore("chart", {
     setChartData(quotes: Quote[], drawings: Drawing[]): void {
       this._quotes = quotes;
       this._drawings = drawings;
+    },
+
+    addDrawing(drawing: Drawing): void {
+      this._drawings = [drawing, ...this._drawings];
+      this.setForceRender();
+    },
+
+    deleteDrawing(drawing: Drawing): void {
+      const index = this._drawings.findIndex((it) => it === drawing);
+      if (index !== -1) {
+        this._drawings.splice(index, 1);
+      }
     },
 
     initCharts(fromPos: number, toPos: number, ...charts: Chart[]): void {
@@ -103,5 +117,9 @@ export const useChartStore = defineStore("chart", {
     setForceRender(): void {
       this._forceRender++;
     },
+
+    toggleDrawMode(): void {
+      this._drawMode = !this.drawMode;
+    }
   },
 });

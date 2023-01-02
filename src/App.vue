@@ -31,7 +31,7 @@ html, body {
   flex-direction: column;
   font-size: 14px;
   box-sizing: border-box;
-  overflow: hidden;
+  // overflow: hidden;
 
   .header {
     height: 3em;

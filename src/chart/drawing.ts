@@ -1,7 +1,10 @@
+import { LineDrawingData } from "./drawings/line.drawing";
 import { RenderContext } from "./renderer";
 
 export interface Drawing {
   readonly chartName: string;
+  readonly type: string;
+  readonly data: LineDrawingData;
 
   render(context: RenderContext): void;
   isHover(cursorX: number, cursorY: number): boolean;
