@@ -8,7 +8,7 @@ type SupplementedReturnType = {
     quotes: Quote[]
 }
 
-export const supplementSecurityDataFile = async (dataFile: QuoteDataFile, securityNumber: string): Promise<SupplementedReturnType> => {
+export const supplementSecurityDataFile = async (dataFile: QuoteDataFile, securityId: string): Promise<SupplementedReturnType> => {
     const currDate = DateTime.now().toFormat('dd/MM/yyyy');
     const lastUpdated = dataFile.lastUpdated === 'never' ? 'never' : DateTime.fromFormat(dataFile.lastUpdated, 'dd/MM/yyyy HH:mm:ss').toFormat('dd/MM/yyyy')
     if (lastUpdated === currDate) {
@@ -23,7 +23,7 @@ export const supplementSecurityDataFile = async (dataFile: QuoteDataFile, securi
     let areAllNew = true;
     let pageNumber = 1;
     while (areAllNew && pageNumber < 6) {
-        const newData = await getSecurityHistory(securityNumber, pageNumber);
+        const newData = await getSecurityHistory(securityId, pageNumber);
         newData.forEach((newDataItem) => {
             if (dateMap.has(newDataItem.tradeDate)) {
                 areAllNew = false;

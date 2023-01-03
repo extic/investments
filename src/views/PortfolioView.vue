@@ -11,7 +11,7 @@
       <thead>
         <tr>
           <th class="actions-column"></th>
-          <th>Number</th>
+          <th>Security ID</th>
           <th>Name</th>
           <th>Buy Date</th>
           <th>Buy Rate</th>
@@ -32,7 +32,7 @@
               </button>
             </div>
           </td>
-          <td>{{ item.number }}</td>
+          <td>{{ item.securityId }}</td>
           <td>{{ item.name }}</td>
           <td>{{ item.buyDate }}</td>
           <td>{{ item.buyRate }}</td>
@@ -89,14 +89,14 @@ export default defineComponent({
     };
 
     const showChart = async (security: PortfolioItem) => {
-      await router.push({ name: 'securityChart', params: { securityNumber: security.number }});
+      await router.push({ name: 'securityChart', params: { securityId: security.securityId }});
     };
 
     const refresh = async () => {
-      const promises = store.items.map((item) => getSecurityInfo(item.number));
+      const promises = store.items.map((item) => getSecurityInfo(item.securityId));
       const responses = await Promise.all(promises);
       responses.forEach((info) => {
-        const item = store.items.find((item) => item.number === info.number)!!;
+        const item = store.items.find((item) => item.securityId === info.number)!!;
         item.lastRate = info.lastRate;
         item.changeFromBuy = (item.lastRate - item.buyRate) * item.quantity / 100;
         item.changeFromBuyPercentage = Math.round(((item.lastRate - item.buyRate) / item.buyRate) * 10000) / 100;

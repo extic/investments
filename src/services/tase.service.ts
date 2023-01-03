@@ -1,32 +1,14 @@
 import { ipcRenderer } from "electron";
-import { SecurityListItem } from "@/store/security-list.store";
 import { SecurityInfo } from "@/store/portfolio.store";
 import { DateTime } from "luxon";
 import { Quote } from "@/store/chart.store";
 
-export const getSecurityList = async (): Promise<SecurityListItem[]> => {
-  const body = {
-    dType: 1,
-    TotalRec: 1,
-    pageNum: 1,
-    oId: "142",
-    lang: "0",
-  };
-  const response = await ipcRenderer.invoke("http:request", "post", "https://api.tase.co.il/api/index/components", body);
-  return response.Items.map((it: any) => {
-    return {
-      number: it.SecurityNumber,
-      name: it.ShortName,
-    } as SecurityListItem;
-  });
-};
-
-export const getSecurityHistory = async (securityNumber: string, pageNumber: number): Promise<Quote[]> => {
+export const getSecurityHistory = async (securityId: string, pageNumber: number): Promise<Quote[]> => {
   const body = {
     pType: 7,
     TotalRec: 1,
     pageNum: pageNumber,
-    oId: securityNumber,
+    oId: securityId,
     lang: "1",
   };
   const response = await ipcRenderer.invoke("http:request", "post", "https://api.tase.co.il/api/security/historyeod", body);

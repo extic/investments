@@ -6,7 +6,7 @@ import { createFolder, isFolderExists, readFile, writeFile } from "../file.servi
 
 export type MetaDataFile = {
   lastUpdated: string;
-  securityNumber: string;
+  securityId: string;
   securityName: string;
 }
 
@@ -26,58 +26,58 @@ export type DrawingData = {
   data: LineDrawingData
 }
 
-export const readMetaDataFile = (securityNumber: string): MetaDataFile => {
-  return readFile<MetaDataFile>(`${getSecurityFolder(securityNumber)}/meta`)
+export const readMetaDataFile = (securityId: string): MetaDataFile => {
+  return readFile<MetaDataFile>(`${getSecurityFolder(securityId)}/meta`)
 }
 
-export const readQuotesDataFile = (securityNumber: string): QuoteDataFile => {
-    return readFile<QuoteDataFile>(`${getSecurityFolder(securityNumber)}/quotes`)
+export const readQuotesDataFile = (securityId: string): QuoteDataFile => {
+    return readFile<QuoteDataFile>(`${getSecurityFolder(securityId)}/quotes`)
 }
 
-export const readDrawingDataFile = (securityNumber: string): DrawingDataFile => {
-  return readFile<DrawingDataFile>(`${getSecurityFolder(securityNumber)}/drawings`)
+export const readDrawingDataFile = (securityId: string): DrawingDataFile => {
+  return readFile<DrawingDataFile>(`${getSecurityFolder(securityId)}/drawings`)
 }
 
-export const saveMetaDataFile = (securityNumber: string, securityName: string, lastUpdated?: string) => {
+export const saveMetaDataFile = (securityId: string, securityName: string, lastUpdated?: string) => {
   const content =  {
     lastUpdated: lastUpdated ?? DateTime.now().toFormat('dd/MM/yyyy HH:mm:ss'),
-    securityNumber,
+    securityId,
     securityName,
   }
-  writeFile<MetaDataFile>(`${getSecurityFolder(securityNumber)}/meta`, content);
+  writeFile<MetaDataFile>(`${getSecurityFolder(securityId)}/meta`, content);
 }
 
-export const saveQuotesDataFile = (securityNumber: string, quotes: Quote[], lastUpdated?: string) => {
+export const saveQuotesDataFile = (securityId: string, quotes: Quote[], lastUpdated?: string) => {
   const content = {
     lastUpdated: lastUpdated ?? DateTime.now().toFormat('dd/MM/yyyy HH:mm:ss'),
     quotes,
   };
-  writeFile<QuoteDataFile>(`${getSecurityFolder(securityNumber)}/quotes`, content);
+  writeFile<QuoteDataFile>(`${getSecurityFolder(securityId)}/quotes`, content);
 }
 
-export const saveDrawingsDataFile = (securityNumber: string, drawings: DrawingData[], lastUpdated?: string) => {
+export const saveDrawingsDataFile = (securityId: string, drawings: DrawingData[], lastUpdated?: string) => {
   const content = {
     lastUpdated: lastUpdated ?? DateTime.now().toFormat('dd/MM/yyyy HH:mm:ss'),
     drawings,
   };
-  writeFile<DrawingDataFile>(`${getSecurityFolder(securityNumber)}/drawings`, content);
+  writeFile<DrawingDataFile>(`${getSecurityFolder(securityId)}/drawings`, content);
 }
 
-export const assureSecurityFolderExists = (securityNumber: string): void => {
-  if (isFolderExists(getSecurityFolder(securityNumber))) {
+export const assureSecurityFolderExists = (securityId: string): void => {
+  if (isFolderExists(getSecurityFolder(securityId))) {
     return;
   }
 
-  createFolder(getSecurityFolder(securityNumber));
+  createFolder(getSecurityFolder(securityId));
 
   const store = useSecurityListStore();
-  const security = store.list.find((it) => it.number === securityNumber)!!;
+  const security = store.list.find((it) => it.id === securityId)!!;
 
-  saveMetaDataFile(securityNumber, security.name, 'never');
-  saveQuotesDataFile(securityNumber, [], 'never');
-  saveDrawingsDataFile(securityNumber, [], 'never');
+  saveMetaDataFile(securityId, security.name, 'never');
+  saveQuotesDataFile(securityId, [], 'never');
+  saveDrawingsDataFile(securityId, [], 'never');
 }
 
-const getSecurityFolder = (securityNumber: string): string => {
-  return `securities/${securityNumber}`;
+const getSecurityFolder = (securityId: string): string => {
+  return `securities/${securityId}`;
 }

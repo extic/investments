@@ -1,7 +1,7 @@
 import { DomainAxis } from "@/chart/axis";
 import { Chart } from "@/chart/chart";
 import { Drawing } from "@/chart/drawing";
-import { SelectedSecurity } from "@/types/types";
+import { Security } from "@/types/types";
 import { defineStore } from "pinia";
 
 export type Quote = {
@@ -34,7 +34,7 @@ export type DomainContext = {
 
 export const useChartStore = defineStore("chart", {
   state: () => ({
-    _selectedSecurity: undefined as SelectedSecurity,
+    _selectedSecurity: undefined as Security | undefined,
     _quotes: [] as Quote[],
     _drawings: [] as Drawing[],
     _charts: [] as Chart[],
@@ -50,7 +50,7 @@ export const useChartStore = defineStore("chart", {
   }),
 
   getters: {
-    selectedSecurity: (state): SelectedSecurity => state._selectedSecurity,
+    selectedSecurity: (state): Security | undefined=> state._selectedSecurity,
     quotes: (state): Quote[] => state._quotes,
     drawings: (state): Drawing[] => state._drawings,
     charts: (state): Chart[] => state._charts,
@@ -66,7 +66,7 @@ export const useChartStore = defineStore("chart", {
   },
 
   actions: {
-    setSelectedSecurity(selectedSecurity: SelectedSecurity): void {
+    setSelectedSecurity(selectedSecurity: Security | undefined): void {
       this._selectedSecurity = selectedSecurity;
     },
 

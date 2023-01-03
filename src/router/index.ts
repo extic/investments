@@ -25,7 +25,7 @@ const routes: Array<RouteRecordRaw> = [
     component: WatchlistView,
   },
   {
-    path: "/securityChart/:securityNumber",
+    path: "/securityChart/:securityId",
     name: "securityChart",
     component: SecurityChartView,
   },

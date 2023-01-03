@@ -1,31 +1,49 @@
 <template>
   <div class="security-list-view">
-    <button @click="refreshList">Refresh List</button>
-    <table>
-      <thead>
-        <tr>
-          <th class="actions-column"></th>
-          <th>Number</th>
-          <th>Name</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="security in securityList" :key="security.number" @click="select(security)" :class="{ selected: security === selectedSecurity }">
-          <td class="actions-column">
-            <div class="action-list">
-              <button class="action-button" @click="addSecurity(security, $event)">
-                <img src="../assets/images/three-dots.svg" alt="add" />
-              </button>
-              <button class="action-button" @click="showChart(security)">
-                <img src="../assets/images/stock-chart.svg" alt="add" />
-              </button>
-            </div>
-          </td>
-          <td>{{ security.number }}</td>
-          <td>{{ security.name }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="action-bar">
+      <div class="right-side">
+        <div class="field">
+          <span>Index</span>
+          <select v-model="selectedIndex">
+            <option v-for="index in indices">{{ index }}</option>
+          </select>
+        </div>
+        <div class="field">
+          <span>Filter</span>
+          <input v-model="filter" />
+        </div>
+      </div>
+      <button class="refresh-button" @click="refreshList">
+        <img src="../assets/images/refresh.svg" alt="refresh" :class="{ refreshing: isRefreshing }" />
+      </button>
+    </div>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th class="actions-column"></th>
+            <th>Number</th>
+            <th class="name-column">Name</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="security in securityList" :key="security.id" @click="select(security)" :class="{ selected: security === selectedSecurity }">
+            <td class="actions-column">
+              <div class="action-list">
+                <button class="action-button" @click="addSecurity(security, $event)">
+                  <img src="../assets/images/three-dots.svg" alt="add" />
+                </button>
+                <button class="action-button" @click="showChart(security)">
+                  <img src="../assets/images/stock-chart.svg" alt="add" />
+                </button>
+              </div>
+            </td>
+            <td>{{ security.id }}</td>
+            <td class="name-column">{{ security.name }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     <div
       ref="addContextMenu"
       class="context-menu"
@@ -43,38 +61,66 @@
 <script lang="ts">
 import router from "@/router";
 import { writeFile } from "@/services/file.service";
-import { getSecurityList } from "@/services/tase.service";
-import { SecurityListItem, useSecurityListStore } from "@/store/security-list.store";
-import { WatchlistItem, useWatchlistStore } from "@/store/watchlist.store";
+import { getSecurityList } from "@/services/tase/security-list.tase.service";
+import { useSecurityListStore } from "@/store/security-list.store";
 import { Security } from "@/types/types";
-import { randomUUID } from "crypto";
 import { computed, defineComponent, ref } from "vue";
 
 export default defineComponent({
   name: "SecurityListView",
 
   setup() {
-    const securityListStore = useSecurityListStore();
+    const store = useSecurityListStore();
 
-    const securityList = computed(() => {
-      return securityListStore.list;
+    const filter = computed({
+      get: () => {
+        return store.filter;
+      },
+      set: (newValue: string) => {
+        store.setFilter(newValue);
+      },
     });
 
-    const selectedSecurity = computed(() => {
-      return securityListStore.selected;
+    const indices = computed(() => {
+      return store.indices;
+    });
+
+    const selectedIndex = computed({
+      get: () => {
+        return store.selectedIndex;
+      },
+      set: (newValue: string) => {
+        store.setSelectedIndex(newValue);
+      },
     });
 
     const refreshList = async () => {
+      store.setRefreshing(true);
       const list = await getSecurityList();
-      await writeFile("security-list", list);
-      securityListStore.setList(list);
+      writeFile("security-list", list);
+      store.setList(list);
+      store.setRefreshing(false);
     };
 
-    const select = async (security: SecurityListItem) => {
+    const isRefreshing = computed(() => {
+      return store.refreshing;
+    });
+
+    const securityList = computed(() => {
+      const indexFilter = selectedIndex.value === "" ? store.list : store.list.filter((it) => it.indices.includes(selectedIndex.value));
+      const filterText = filter.value;
+      return filterText.trim() === "" ? indexFilter : indexFilter.filter((it) => it.name.includes(filterText));
+    });
+
+    const selectedSecurity = computed(() => {
+      return store.selected;
+    });
+
+    const select = async (security: Security) => {
       if (selectedSecurity.value === security) {
-        securityListStore.setSelected(undefined);
+        store.setSelected(undefined);
       } else {
-        securityListStore.setSelected(security);
+        store.setSelected(security);
       }
     };
 
@@ -89,7 +135,7 @@ export default defineComponent({
     };
 
     const showChart = async (security: Security) => {
-      await router.push({ name: 'securityChart', params: { securityNumber: security.number }});
+      await router.push({ name: "securityChart", params: { securityId: security.id } });
     };
 
     const addToPortfolio = () => {
@@ -99,20 +145,24 @@ export default defineComponent({
     };
 
     const track = () => {
-      const watchlistStore = useWatchlistStore();
-      watchlistStore.add({
-        id: randomUUID(),
-        number: selectedSecurity.value!!.number,
-        name: selectedSecurity.value!!.name,
-      } as WatchlistItem);
-      showContextMenu.value = false;
+      // const watchlistStore = useWatchlistStore();
+      // watchlistStore.add({
+      //   id: randomUUID(),
+      //   number: selectedSecurity.value!!.number,
+      //   name: selectedSecurity.value!!.name,
+      // } as WatchlistItem);
+      // showContextMenu.value = false;
     };
 
     return {
-      securityList,
+      filter,
+      indices,
+      selectedIndex,
       refreshList,
-      select,
+      isRefreshing,
+      securityList,
       selectedSecurity,
+      select,
       addSecurity,
       addToPortfolio,
       track,
@@ -128,10 +178,58 @@ export default defineComponent({
 <style lang="scss" scoped>
 .security-list-view {
   @import "../styles/table.scss";
-  overflow: auto;
+  display: flex;
+  flex-direction: column;
 
-  table {
-    width: 300px;
+  .action-bar {
+    display: flex;
+    padding: 0.2em 1em;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid lightgray;
+
+    .right-side {
+      display: flex;
+      gap: 2em;
+      align-items: center;
+    }
+
+    .field {
+      display: flex;
+      gap: 0.5em;
+      align-items: center;
+
+      select {
+        direction: rtl;
+      }
+    }
+
+    .refresh-button {
+      line-height: 0em;
+      padding: 0 1em;
+      img {
+        width: 1.5em;
+        height: 1.5em;
+
+        &.refreshing {
+          animation: rotation 2s infinite linear;
+        }
+      }
+    }
+  }
+
+  .table-container {
+    overflow: auto;
+    flex-grow: 1;
+    margin-top: 0.5em;
+
+    table {
+      // width: 300px;
+
+      .name-column {
+        width: 10em;
+      }
+    }
   }
 
   .context-menu {
@@ -160,6 +258,15 @@ export default defineComponent({
       li:hover {
         background-color: rgb(199, 199, 199);
       }
+    }
+  }
+
+  @keyframes rotation {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(359deg);
     }
   }
 }

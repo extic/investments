@@ -34,22 +34,22 @@ export default defineComponent({
       const chartStore = useChartStore();
       chartStore.setSelectedSecurity(undefined);
 
-      const securityNumber = useRoute().params.securityNumber as string;
-      assureSecurityFolderExists(securityNumber);
+      const securityId = useRoute().params.securityId as string;
+      assureSecurityFolderExists(securityId);
 
-      const quotesDataFile = readQuotesDataFile(useRoute().params.securityNumber as string);
+      const quotesDataFile = readQuotesDataFile(useRoute().params.securityId as string);
 
-      const { modified, quotes: newData } = await supplementSecurityDataFile(quotesDataFile, securityNumber);
+      const { modified, quotes: newData } = await supplementSecurityDataFile(quotesDataFile, securityId);
       newData.sort((a, b): number => a.tradeDateMillis - b.tradeDateMillis);
       if (modified) {
-        saveQuotesDataFile(securityNumber, newData);
+        saveQuotesDataFile(securityId, newData);
       }
 
       const securityListStore = useSecurityListStore();
-      const security = securityListStore.list.find((it) => it.number === securityNumber);
+      const security = securityListStore.list.find((it) => it.id === securityId);
       chartStore.setSelectedSecurity(security);
 
-      const drawingDataFile = readDrawingDataFile(securityNumber);
+      const drawingDataFile = readDrawingDataFile(securityId);
       const drawings = drawingDataFile.drawings.map((it) => {
         if (it.type === 'line') {
           return new LineDrawing(it.chartName, it.data);

@@ -9,16 +9,16 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in store.items" :key="item.id" @click="select(item)" :class="{'selected': item === store.selected}">
+        <tr v-for="id in store.items" @click="select(id)" :class="{'selected': id === store.selected}">
           <td class="actions-column">
             <div class="action-list">
-              <button class="action-button" @click="showChart(item)">
+              <button class="action-button" @click="showChart(id)">
                 <img src="../assets/images/stock-chart.svg" alt="add" />
               </button>
             </div>
           </td>
-          <td>{{ item.number }}</td>
-          <td>{{ item.name }}</td>
+          <td>{{ id }}</td>
+          <td>{{ getSecurityName(id) }}</td>
         </tr>
       </tbody>
     </table>
@@ -28,7 +28,8 @@
 
 <script lang="ts">
 import router from "@/router";
-import { WatchlistItem, useWatchlistStore } from "@/store/watchlist.store";
+import { useSecurityListStore } from "@/store/security-list.store";
+import { useWatchlistStore } from "@/store/watchlist.store";
 import { defineComponent } from "vue";
 
 export default defineComponent({
@@ -36,20 +37,25 @@ export default defineComponent({
 
   setup() {
     const store = useWatchlistStore();
+    const securityStore = useSecurityListStore();
 
-    const select = async (item: WatchlistItem) => {
-      if (store.selected === item) {
+    const getSecurityName = (id: string) => {
+      return securityStore.list.find((it) => it.id === id)!!.name;
+    };
+
+    const select = async (id: string) => {
+      if (store.selected === id) {
         store.setSelected(undefined);
       } else {
-        store.setSelected(item);
+        store.setSelected(id);
       }
     };
 
-    const showChart = async (security: WatchlistItem) => {
-      await router.push({ name: 'securityChart', params: { securityNumber: security.number }});
+    const showChart = async (id: string) => {
+      await router.push({ name: 'securityChart', params: { securityId: id }});
     };
 
-    return { store, select, showChart };
+    return { store, getSecurityName, select, showChart };
   },
 });
 </script>

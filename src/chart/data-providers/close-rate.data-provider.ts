@@ -1,4 +1,4 @@
-import { SecurityData } from "../../store/chart.store";
+import { Quote } from "../../store/chart.store";
 import { DataProvider } from "../data-provider";
 
 export type CandleStickData = {
@@ -8,8 +8,8 @@ export type CandleStickData = {
   open: number;
 }
 
-export class CloseRateDataProvider implements DataProvider<SecurityData, number> {
-  public provide(data: SecurityData[]): number[] {
+export class CloseRateDataProvider implements DataProvider<Quote, number> {
+  public provide(data: Quote[]): number[] {
     return data.map((it) => it.closeRate );
   }
 }

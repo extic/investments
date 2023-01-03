@@ -6,8 +6,10 @@ export type Portfolio = {
   items: PortfolioItem[];
 }
 
-export type PortfolioItem = Security & {
+export type PortfolioItem = {
   id: string;
+  securityId: string;
+  name: string;
   buyDate: string;
   buyRate: number;
   quantity: number;

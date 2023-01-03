@@ -13,7 +13,6 @@
     </div>
     <ChartDatePane></ChartDatePane>
   </div>
-  <!-- <ChartScrollbar></ChartScrollbar> -->
 </template>
 
 <script lang="ts">
@@ -23,14 +22,13 @@ import { computed, defineComponent, onMounted, ref, watch } from "vue";
 import { useChartStore } from "../store/chart.store";
 import ChartDatePane from "./chart/ChartDatePane.vue";
 import ChartPane from "./chart/ChartPane.vue";
-import ChartScrollbar from "./chart/ChartScrollbar.vue";
 import { LineDrawing } from "@/chart/drawings/line.drawing";
 import { DrawingData, saveDrawingsDataFile } from "@/services/db/security-data.db.service";
 
 export default defineComponent({
   name: "SecurityChart",
 
-  components: { ChartScrollbar, ChartDatePane, ChartPane },
+  components: { ChartDatePane, ChartPane },
 
   setup() {
     const store = useChartStore();
@@ -81,7 +79,7 @@ export default defineComponent({
           data: it.data,
         } as DrawingData
       });
-      saveDrawingsDataFile(store.selectedSecurity!!.number, drawingsData);
+      saveDrawingsDataFile(store.selectedSecurity!!.id, drawingsData);
     };
 
 

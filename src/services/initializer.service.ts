@@ -1,11 +1,12 @@
 import { Portfolio, usePortfolioStore } from "@/store/portfolio.store";
-import { SecurityListItem, useSecurityListStore } from "@/store/security-list.store";
-import { useWatchlistStore, WatchlistItem } from "@/store/watchlist.store";
+import { useSecurityListStore } from "@/store/security-list.store";
+import { useWatchlistStore } from "@/store/watchlist.store";
+import { Security } from "@/types/types";
 import { readFile } from "./file.service";
 
 export const initApp = () => {
   const securityListStore = useSecurityListStore();
-  const securityList = readFile<SecurityListItem[]>("security-list");
+  const securityList = readFile<Security[]>("security-list");
   securityListStore.setList(securityList);
 
   const portfolioStore = usePortfolioStore();
@@ -13,6 +14,6 @@ export const initApp = () => {
   portfolioStore.setPortfolio(portfolio);
 
   const watchlistStore = useWatchlistStore();
-  const watchlist = readFile<WatchlistItem[]>("watchlist");
+  const watchlist = readFile<string[]>("watchlist");
   watchlistStore.setItems(watchlist);
 };

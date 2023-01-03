@@ -2,32 +2,28 @@ import { writeFile } from "@/services/file.service";
 import { Security } from "@/types/types";
 import { defineStore } from "pinia";
 
-export type WatchlistItem = Security & {
-  id: string;
-};
-
 export const useWatchlistStore = defineStore("Watchlist", {
   state: () => ({
-    _items: [] as WatchlistItem[],
-    _selected: undefined as WatchlistItem | undefined,
+    _items: [] as string[],
+    _selected: undefined as string | undefined,
   }),
 
   getters: {
-    items: (state): WatchlistItem[] => state._items,
-    selected: (state): WatchlistItem | undefined => state._selected,
+    items: (state): string[] => state._items,
+    selected: (state): string | undefined => state._selected,
   },
 
   actions: {
-    setItems(items: WatchlistItem[]): void {
+    setItems(items: string[]): void {
       this._items = items;
     },
 
-    setSelected(selected: WatchlistItem | undefined): void {
+    setSelected(selected: string | undefined): void {
       this._selected = selected;
     },
 
-    add(item: WatchlistItem): void {
-      if (!this._items.find((it) => it.number === item.number)) {
+    add(item: string): void {
+      if (!this._items.includes(item)) {
         this._items.push(item);
         writeFile(`watchlist`, this._items);
       }
